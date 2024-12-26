@@ -7,6 +7,9 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // @ts-ignore
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
+import { EditorTab } from "./editor-tab";
+
+const EDITOR_WIDTH = "650px";
 
 interface TutorialContentProps {
   selectedTutorial: string;
@@ -73,15 +76,21 @@ export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
           code: ({ node, inline, className, children, ...props }) => {
             const match = /language-(\w+)/.exec(className || "");
             return !inline && match ? (
-              <SyntaxHighlighter
-                style={vscDarkPlus}
-                language={match[1]}
-                PreTag="div"
-                className="rounded-md my-4"
-                {...props}
-              >
-                {String(children).replace(/\n$/, "")}
-              </SyntaxHighlighter>
+              <div className="flex flex-row items-center justify-center my-10">
+                <div
+                  className={`shadow-xl bg-[#0D1117] border border-[#30363D] rounded-xl overflow-hidden w-[${EDITOR_WIDTH}]
+                            [&_*]:!cursor-text [&_.cm-editor]:rounded-xl [&_.cm-scroller]:!overflow-auto`}
+                >
+                  <EditorTab
+                    className="text-md"
+                    height="auto"
+                    width={EDITOR_WIDTH}
+                    readonly={true}
+                    useLineGutter={true}
+                    code={String(children).replace(/\n$/, "")}
+                  />
+                </div>
+              </div>
             ) : (
               <code
                 className="bg-[#161B22] rounded-md px-1 py-0.5 text-[#E6EDF3]"

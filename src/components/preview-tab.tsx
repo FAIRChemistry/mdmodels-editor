@@ -43,10 +43,7 @@ export function PreviewTab() {
           // @ts-ignore
           code: ({ node, inline, ...props }) =>
             inline ? (
-              <code
-                className="bg-gray-800 rounded px-1 py-0.5 text-gray-300"
-                {...props}
-              />
+              <p />
             ) : (
               <code
                 className="block bg-gray-800 rounded p-2 mb-4 text-gray-300"

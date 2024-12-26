@@ -1,4 +1,4 @@
-import { type Node } from "reactflow";
+import { EdgeProps, type Node } from "reactflow";
 
 /**
  * Represents a validation error with location and message details.
@@ -172,6 +172,11 @@ export enum Tab {
   Preview = "preview",
 }
 
+interface AttributeEdge extends SchemaAttribute {
+  sourceObject: string;
+  targetObject: string;
+}
+
 export type {
   ObjectNodeType,
   RSError,
@@ -184,4 +189,5 @@ export type {
   SchemaConfig,
   XMLConfig,
   Option,
+  AttributeEdge,
 };

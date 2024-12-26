@@ -26,6 +26,29 @@ import { GitHubLogoIcon, FileIcon } from "@radix-ui/react-icons";
 import { Label } from "@/components/ui/label";
 import { useValidatorStore } from "@/lib/stores/validator-store";
 import { Tab } from "@/types";
+import { Badge } from "@/components/ui/badge";
+
+interface GitHubExample {
+  name: string;
+  repoUrl: string;
+  branch: string;
+  filePath: string;
+}
+
+const GITHUB_EXAMPLES: GitHubExample[] = [
+  {
+    name: "EnzymeML",
+    repoUrl: "https://github.com/EnzymeML/enzymeml-specifications",
+    branch: "enzymeml-2",
+    filePath: "specifications/enzymeml.md",
+  },
+  {
+    name: "Calibration Data",
+    repoUrl: "https://github.com/FAIRChemistry/CaliPytion",
+    branch: "main",
+    filePath: "specifications/calibration_standard_model.md",
+  },
+];
 
 export function GitHubFileSelector() {
   const [isOpen, setIsOpen] = useState(false);
@@ -139,6 +162,28 @@ export function GitHubFileSelector() {
   const canSelectFile = canSelectBranch && selectedBranch !== "";
   const canImport = canSelectFile && selectedFile !== "";
 
+  const loadExample = async (example: GitHubExample) => {
+    const repoInfo = parseRepoUrl(example.repoUrl);
+    if (repoInfo) {
+      try {
+        setIsLoading(true);
+        const content = await getFileContent(
+          repoInfo.owner,
+          repoInfo.repo,
+          example.filePath,
+          example.branch
+        );
+        setCode(content);
+        setSelectedTab(Tab.Graph);
+        setIsOpen(false);
+      } catch (err) {
+        setError(`Error loading ${example.name} example`);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -154,8 +199,26 @@ export function GitHubFileSelector() {
         <DialogHeader>
           <DialogTitle className="text-white">Import Markdown File</DialogTitle>
           <DialogDescription className="text-[#768390]">
-            Select a Markdown file from a GitHub repository to import as a data
-            model.
+            <div className="flex flex-col gap-2">
+              <p>
+                Select a Markdown file from a GitHub repository to import as a
+                data model. <br />
+                <br />
+                Try one of the examples below:
+              </p>
+              <div className="flex flex-row gap-2">
+                {GITHUB_EXAMPLES.map((example) => (
+                  <Badge
+                    key={example.name}
+                    variant="default"
+                    className="bg-[#2d333b] scale-90 cursor-pointer hover:bg-[#316dca]"
+                    onClick={() => loadExample(example)}
+                  >
+                    {example.name}
+                  </Badge>
+                ))}
+              </div>
+            </div>
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-4 py-4">

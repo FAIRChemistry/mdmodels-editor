@@ -8,30 +8,37 @@ import ReactFlow, {
   useEdgesState,
   Controls,
   DefaultEdgeOptions,
-  MarkerType,
+  useReactFlow,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { useValidatorStore } from "@/lib/stores/validator-store";
+import { useSetCode, useValidatorStore } from "@/lib/stores/validator-store";
 import { createHandleId } from "@/lib/graph-utils";
 import useLayoutNodes from "@/hooks/use-layouted-nodes";
 import { ObjectNode } from "./object-node";
-import { useSetGraphEditorOpen } from "@/lib/stores/graph-store";
+import {
+  useIntermediateCode,
+  useSetGraphEditorOpen,
+  useSetIntermediateCode,
+} from "@/lib/stores/graph-store";
 import { MDModelSchema, SchemaAttribute, SchemaObject } from "@/types";
+import AttributeEdge from "./attribute-edge";
 
 // Node types
 const nodeTypes = {
   objectNode: ObjectNode,
 };
 
+// Edge types
+const edgeTypes = {
+  attributeEdge: AttributeEdge,
+};
+
 // Custom edge style
 const edgeOptions: DefaultEdgeOptions = {
+  type: "attributeEdge",
   style: {
     stroke: "#8B5CF6",
     strokeWidth: 1,
-    color: "#8B5CF6",
-  },
-  markerEnd: {
-    type: MarkerType.ArrowClosed,
     color: "#8B5CF6",
   },
 };
@@ -65,6 +72,11 @@ const createEdgesForObject = (
             targetHandle: createHandleId(dtype),
             target: dtype,
             animated: true,
+            data: {
+              sourceObject: obj.name,
+              targetObject: dtype,
+              ...attr,
+            },
             ...edgeOptions,
           });
         }
@@ -77,6 +89,10 @@ const createEdgesForObject = (
 
 export default function DataStandardGraph() {
   const { structure } = useValidatorStore();
+  const intermediateCode = useIntermediateCode();
+  const setCode = useSetCode();
+  const setIntermediateCode = useSetIntermediateCode();
+  const { setCenter } = useReactFlow();
 
   // Create nodes and edges from the schema data
   const createNodesAndEdges = useCallback(() => {
@@ -100,14 +116,41 @@ export default function DataStandardGraph() {
 
   useEffect(() => {
     const { nodes: newNodes, edges: newEdges } = createNodesAndEdges();
-    setNodes(newNodes);
+
+    setNodes((prevNodes) => {
+      const existingNodesMap = Object.fromEntries(
+        prevNodes.map((node) => [node.id, node])
+      );
+
+      return newNodes.map((newNode) => {
+        const existingNode = existingNodesMap[newNode.id];
+        return existingNode
+          ? { ...newNode, position: existingNode.position }
+          : newNode;
+      });
+    });
+
     setEdges(newEdges);
-  }, [structure, createNodesAndEdges, setNodes, setEdges]);
+
+    // Center on first node if nodes exist
+    if (newNodes.length > 0) {
+      const firstNode = newNodes[0];
+      setCenter(firstNode.position.x, firstNode.position.y, {
+        zoom: 1,
+        duration: 800,
+      });
+    }
+  }, [structure, createNodesAndEdges, setNodes, setEdges, setCenter]);
 
   useLayoutNodes();
 
   const handlePaneClick = () => {
     setGraphEditorOpen(null);
+
+    if (intermediateCode) {
+      setCode(intermediateCode);
+      setIntermediateCode(null);
+    }
   };
 
   return (
@@ -119,10 +162,13 @@ export default function DataStandardGraph() {
         onEdgesChange={onEdgesChange}
         onPaneClick={handlePaneClick}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         connectionLineType={ConnectionLineType.SmoothStep}
         defaultEdgeOptions={edgeOptions}
         nodesDraggable={true}
-        maxZoom={1.0}
+        maxZoom={1.2}
+        minZoom={0.1}
+        fitView
       >
         <Background color="#30363D" />
         <Controls className="bg-[#0D1117] border-[#30363D] [&>button]:text-white [&>button]:border-[#30363D]" />

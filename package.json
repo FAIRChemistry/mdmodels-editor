@@ -33,6 +33,7 @@
     "codemirror": "^6.0.1",
     "elkjs": "^0.9.3",
     "gray-matter": "^4.0.3",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.468.0",
     "mdmodels": "file:pkg",
     "react": "^18.3.1",

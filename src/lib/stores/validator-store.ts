@@ -122,6 +122,7 @@ useValidatorStore.subscribe(
 );
 
 export const useCode = () => useValidatorStore((state) => state.code);
+export const useSetCode = () => useValidatorStore((state) => state.setCode);
 export const useErrors = () => useValidatorStore((state) => state.errors);
 export const useSelectedTab = () =>
   useValidatorStore((state) => state.selectedTab);
@@ -129,4 +130,10 @@ export const useStructure = () => useValidatorStore((state) => state.structure);
 export const useModelObject = (name: string) =>
   useValidatorStore((state) =>
     state.structure?.objects.find((o) => o.name === name)
+  );
+export const useModelAttribute = (objectName: string, attributeName: string) =>
+  useValidatorStore((state) =>
+    state.structure?.objects
+      .find((o) => o.name === objectName)
+      ?.attributes.find((a) => a.name === attributeName)
   );

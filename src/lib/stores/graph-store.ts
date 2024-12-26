@@ -9,6 +9,8 @@ interface GraphStore {
   setGraphEditorOpen: (open: string | null) => void;
   hoveredNode: string | null;
   setHoveredNode: (node: string | null) => void;
+  intermediateCode: string | null;
+  setIntermediateCode: (code: string | null) => void;
 }
 
 export const useGraphStore = create<GraphStore>()(
@@ -17,6 +19,9 @@ export const useGraphStore = create<GraphStore>()(
     setGraphEditorOpen: (open: string | null) => set({ graphEditorOpen: open }),
     hoveredNode: null,
     setHoveredNode: (node: string | null) => set({ hoveredNode: node }),
+    intermediateCode: null,
+    setIntermediateCode: (code: string | null) =>
+      set({ intermediateCode: code }),
   }))
 );
 
@@ -27,3 +32,7 @@ export const useSetGraphEditorOpen = () =>
 export const useHoveredNode = () => useGraphStore((state) => state.hoveredNode);
 export const useSetHoveredNode = () =>
   useGraphStore((state) => state.setHoveredNode);
+export const useIntermediateCode = () =>
+  useGraphStore((state) => state.intermediateCode);
+export const useSetIntermediateCode = () =>
+  useGraphStore((state) => state.setIntermediateCode);

@@ -29,6 +29,9 @@ interface EditorTabProps {
   className?: string;
   jumpToLine?: number;
   useLineGutter?: boolean;
+  setCodeAlt?: (value: string) => void;
+  readonly?: boolean;
+  code?: string;
 }
 
 export const EditorTab = memo(function EditorTab({
@@ -37,16 +40,24 @@ export const EditorTab = memo(function EditorTab({
   className,
   jumpToLine,
   useLineGutter = true,
+  setCodeAlt,
+  readonly = false,
+  code,
 }: EditorTabProps) {
-  const code = useCode();
+  const globalCode = useCode();
+  const displayCode = code ?? globalCode;
   const setCode = useValidatorStore((state) => state.setCode);
   const editorRef = useRef<EditorView | null>(null);
 
   const handleChange = useCallback(
     (value: string) => {
-      setCode(value);
+      if (setCodeAlt) {
+        setCodeAlt(value);
+      } else {
+        setCode(value);
+      }
     },
-    [setCode]
+    [setCode, setCodeAlt]
   );
 
   const handleEditorCreate = useCallback(
@@ -65,7 +76,7 @@ export const EditorTab = memo(function EditorTab({
   return (
     <CodeMirror
       ref={editorRef}
-      value={code}
+      value={displayCode}
       height={height}
       width={width}
       theme={githubDark}
@@ -75,6 +86,7 @@ export const EditorTab = memo(function EditorTab({
       onChange={handleChange}
       className={className}
       onCreateEditor={handleEditorCreate}
+      editable={!readonly}
       basicSetup={{
         lineNumbers: useLineGutter,
         foldGutter: false,

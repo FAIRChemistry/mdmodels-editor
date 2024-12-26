@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useRef, useState, useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { EditorTabs } from "./editor-tabs";
 import { Tab } from "@/types";
@@ -37,6 +37,24 @@ const EDITOR_TABS = [
 
 export function MarkdownEditor() {
   const { selectedTab } = useValidatorStore();
+  const editorContainerRef = useRef<HTMLDivElement>(null);
+  const [editorHeight, setEditorHeight] = useState<number>(0);
+
+  useEffect(() => {
+    if (!editorContainerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setEditorHeight(entry.contentRect.height);
+      }
+    });
+
+    resizeObserver.observe(editorContainerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   return (
     <div className="rounded-lg border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95 h-full flex flex-col">
@@ -52,19 +70,23 @@ export function MarkdownEditor() {
           </div>
         </div>
 
-        <TabsContent value="editor" className="flex-1 mt-0 h-full">
+        <TabsContent
+          value={Tab.Editor}
+          className="flex-1 mt-0 h-full"
+          ref={editorContainerRef}
+        >
           <Suspense fallback={<div>Loading editor...</div>}>
-            <EditorTab height={"690px"} />
+            <EditorTab height={`${editorHeight}px`} />
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="preview" className="flex-1 mt-0 h-full">
+        <TabsContent value={Tab.Preview} className="flex-1 mt-0 h-full">
           <Suspense fallback={<div>Loading preview...</div>}>
             <PreviewTab />
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="graph" className="flex-1 mt-0 h-full">
+        <TabsContent value={Tab.Graph} className="flex-1 mt-0 h-full">
           <Suspense fallback={<div>Loading graph...</div>}>
             <GraphTab />
           </Suspense>
