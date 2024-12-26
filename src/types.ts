@@ -1,3 +1,20 @@
+import { type Node } from "reactflow";
+
+/**
+ * Represents a validation error with location and message details.
+ *
+ * @property id - Unique identifier for the error.
+ * @property location - Location where the error occurred.
+ * @property message - Description of the error.
+ * @property kind - Severity level of the error ("error", "warning", or "info").
+ */
+export type ValidationError = {
+  id: string;
+  location: string;
+  message: string;
+  kind: "error" | "warning" | "info";
+};
+
 /**
  * Represents a validation error from the RSError format.
  *
@@ -56,4 +73,115 @@ interface CodeMirrorError {
   message: string;
 }
 
-export type { RSError, RSValidation, CodeMirrorError };
+/**
+ * Represents MD-Models internal structure
+ */
+interface MDModelSchema {
+  name: string;
+  objects: SchemaObject[];
+  enums: SchemaEnum[];
+  config: SchemaConfig;
+}
+
+/**
+ * Represents XML configuration for an attribute
+ */
+interface XMLConfig {
+  is_attr: boolean;
+  name: string;
+}
+
+/**
+ * Represents an option with key-value pair
+ */
+interface Option {
+  key: string;
+  value: string;
+}
+
+/**
+ * Represents an attribute in a schema object
+ */
+interface SchemaAttribute {
+  name: string;
+  multiple: boolean;
+  is_id: boolean;
+  dtypes: string[];
+  docstring: string;
+  options: Option[];
+  term: string | null;
+  required: boolean;
+  xml: XMLConfig;
+  is_enum: boolean;
+}
+
+/**
+ * Represents a position in the source code
+ */
+interface SourcePosition {
+  line: number;
+  column: { start: number; end: number };
+  offset: { start: number; end: number };
+}
+
+/**
+ * Represents a schema object definition
+ */
+interface SchemaObject {
+  name: string;
+  attributes: SchemaAttribute[];
+  docstring: string;
+  position: SourcePosition;
+}
+
+/**
+ * Represents an enum definition with URI mappings
+ */
+interface SchemaEnum {
+  name: string;
+  mappings: Record<string, string>;
+  docstring: string;
+  position: SourcePosition;
+}
+
+/**
+ * Represents schema configuration
+ */
+interface SchemaConfig {
+  "id-field": boolean;
+  prefixes: Record<string, string>;
+  nsmap: Record<string, string>;
+  repo: string;
+  prefix: string;
+}
+
+/**
+ * Represents a node in the graph with schema object data
+ */
+type ObjectNodeType = Node<SchemaObject, "objectNode">;
+
+/**
+ * Represents the available tabs in the application UI
+ * - Graph: Displays the visual graph representation of the data model
+ * - Schema: Shows the schema validation and export options
+ * - Editor: The markdown editor view
+ */
+export enum Tab {
+  Graph = "graph",
+  Editor = "editor",
+  Preview = "preview",
+}
+
+export type {
+  ObjectNodeType,
+  RSError,
+  RSValidation,
+  CodeMirrorError,
+  MDModelSchema,
+  SchemaObject,
+  SchemaAttribute,
+  SchemaEnum,
+  SchemaConfig,
+  XMLConfig,
+  Option,
+};

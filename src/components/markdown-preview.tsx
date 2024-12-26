@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useValidatorStore } from "@/lib/store";
+import { useValidatorStore } from "@/lib/stores/validator-store";
 import matter from "gray-matter";
 export function MarkdownPreview() {
   const { code } = useValidatorStore();

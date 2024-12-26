@@ -1,6 +1,12 @@
 import { EMPTY_DOC_ERROR } from "@/components/markdown-editor";
-import { RSValidation } from "@/types";
-import { convert_to, Templates, validate, json_schema } from "mdmodels";
+import { MDModelSchema, RSValidation } from "@/types";
+import {
+  convert_to,
+  Templates,
+  validate,
+  json_schema,
+  parse_model,
+} from "mdmodels";
 
 /**
  * Validates markdown model content using the mdmodels validator
@@ -43,4 +49,20 @@ export function convertModel(content: string, template: Templates) {
     return json_schema(content, undefined, false);
   }
   return convert_to(content, template);
+}
+
+/**
+ * Parses a markdown model string into a structured MDModelSchema object
+ * @param content The markdown string to parse
+ * @returns The parsed MDModelSchema object, or null if parsing fails
+ */
+export function getMdModelStructure(content: string): MDModelSchema | null {
+  try {
+    const parsed = parse_model(content);
+    console.log(parsed);
+    return parsed;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }

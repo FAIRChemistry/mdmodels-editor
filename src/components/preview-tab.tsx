@@ -1,14 +1,18 @@
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useValidatorStore } from "@/lib/store";
+import { useCode } from "@/lib/stores/validator-store";
 import matter from "gray-matter";
 
 export function PreviewTab() {
-  const { code } = useValidatorStore();
-  const { content } = matter(code);
+  const code = useCode();
 
-  return (
-    <ScrollArea className="h-[600px] p-10">
+  // Memoize the parsing of the code to extract content
+  const { content } = useMemo(() => matter(code), [code]);
+
+  // Memoize the ReactMarkdown component to prevent re-rendering
+  const MarkdownContent = useMemo(() => {
+    return (
       <ReactMarkdown
         className="prose prose-invert max-w-none text-white"
         components={{
@@ -76,6 +80,8 @@ export function PreviewTab() {
       >
         {content}
       </ReactMarkdown>
-    </ScrollArea>
-  );
+    );
+  }, [content]); // Recompute only when `content` changes
+
+  return <ScrollArea className="h-full p-4">{MarkdownContent}</ScrollArea>;
 }

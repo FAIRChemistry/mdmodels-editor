@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, FileJson, ClipboardCopy } from "lucide-react";
+import { Download, ClipboardCopy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Templates } from "mdmodels";
-import { useValidatorStore } from "@/lib/store";
+import { useValidatorStore } from "@/lib/stores/validator-store";
 import { convertModel } from "@/lib/mdutils";
 
 const TEMPLATE_MAPPING: Record<string, Templates> = {
@@ -136,8 +136,7 @@ export default function SchemaExporter() {
           variant="outline"
           className="bg-transparent text-gray-400 hover:text-gray-300 border-none hover:bg-transparent hover:border-none"
         >
-          <FileJson className="mr-2 h-4 w-4" />
-          Export
+          <Download className="h-4 w-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] rounded-lg border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-lg bg-opacity-95">

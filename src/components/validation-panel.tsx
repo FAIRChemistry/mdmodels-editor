@@ -1,14 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useValidatorStore } from "@/lib/store";
+import { useValidatorStore } from "@/lib/stores/validator-store";
+import { ValidationError } from "@/types";
 import { AlertCircle, XCircle, AlertTriangle } from "lucide-react";
-
-export type ValidationError = {
-  id: string;
-  location: string;
-  message: string;
-  kind: "error" | "warning" | "info";
-};
 
 const HighlightText = ({ text }: { text: string }) => {
   const parts = text.split(/('.*?')/g);
@@ -30,7 +24,7 @@ const HighlightText = ({ text }: { text: string }) => {
 };
 
 export function ValidationPanel() {
-  const errors = useValidatorStore((state) => state.errors);
+  const { errors } = useValidatorStore();
 
   const getErrorIcon = (kind: ValidationError["kind"]) => {
     switch (kind) {

@@ -1,5 +1,5 @@
 import { EMPTY_DOC_ERROR } from "@/components/markdown-editor";
-import { ValidationError } from "@/components/validation-panel";
+import { ValidationError } from "@/types";
 import { CodeMirrorError, RSError, RSValidation } from "@/types";
 import { validate } from "mdmodels";
 
@@ -46,7 +46,7 @@ export function mdErrorToCodeMirrorError(error: RSError): CodeMirrorError[] {
  * @param code - The markdown string to validate
  * @returns An array of ValidationError objects containing any validation errors found
  */
-export function getErrors(code: string) {
+export function getErrors(code: string): ValidationError[] {
   const validation: RSValidation = validate(code);
   const convertedErrors: ValidationError[] = convertErrors(validation);
 

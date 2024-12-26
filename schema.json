@@ -1,0 +1,147 @@
+{
+  "name": "This is a test schema",
+  "objects": [
+    {
+      "name": "Test",
+      "attributes": [
+        {
+          "name": "name",
+          "multiple": false,
+          "is_id": false,
+          "dtypes": [
+            "string"
+          ],
+          "docstring": "",
+          "options": [],
+          "term": "schema:hello",
+          "required": true,
+          "xml": {
+            "is_attr": true,
+            "name": "name"
+          },
+          "is_enum": false
+        },
+        {
+          "name": "number",
+          "multiple": false,
+          "is_id": false,
+          "dtypes": [
+            "float"
+          ],
+          "docstring": "",
+          "options": [],
+          "term": "schema:one",
+          "required": false,
+          "xml": {
+            "is_attr": true,
+            "name": "number"
+          },
+          "is_enum": false
+        },
+        {
+          "name": "test2",
+          "multiple": true,
+          "is_id": false,
+          "dtypes": [
+            "Test2"
+          ],
+          "docstring": "",
+          "options": [],
+          "term": "schema:something",
+          "required": false,
+          "xml": {
+            "is_attr": false,
+            "name": "SomeTest2"
+          },
+          "is_enum": false
+        },
+        {
+          "name": "ontology",
+          "multiple": false,
+          "is_id": false,
+          "dtypes": [
+            "Ontology"
+          ],
+          "docstring": "",
+          "options": [],
+          "term": null,
+          "required": false,
+          "xml": {
+            "is_attr": false,
+            "name": "ontology"
+          },
+          "is_enum": true
+        }
+      ],
+      "docstring": "The  schema defines the primary structure for the test entity. It contains multiple properties that capture various attributes of a test, including its name, numerical identifier, a nested array of test2 objects, and an ontology reference."
+    },
+    {
+      "name": "Test2",
+      "attributes": [
+        {
+          "name": "names",
+          "multiple": true,
+          "is_id": false,
+          "dtypes": [
+            "string"
+          ],
+          "docstring": "",
+          "options": [],
+          "term": "schema:hello",
+          "required": false,
+          "xml": {
+            "is_attr": false,
+            "name": "name"
+          },
+          "is_enum": false
+        },
+        {
+          "name": "number",
+          "multiple": false,
+          "is_id": false,
+          "dtypes": [
+            "float"
+          ],
+          "docstring": "",
+          "options": [
+            {
+              "key": "minimum",
+              "value": "0"
+            }
+          ],
+          "term": "schema:one",
+          "required": false,
+          "xml": {
+            "is_attr": true,
+            "name": "number"
+          },
+          "is_enum": false
+        }
+      ],
+      "docstring": "The  schema represents a secondary structure used within the primary  schema. It is designed to hold an array of strings for names, a numerical value with a specified minimum, and other nested properties."
+    }
+  ],
+  "enums": [
+    {
+      "name": "Ontology",
+      "mappings": {
+        "ECO": "https://www.evidenceontology.org/term/",
+        "GO": "https://amigo.geneontology.org/amigo/term/",
+        "SIO": "http://semanticscience.org/resource/"
+      },
+      "docstring": ""
+    }
+  ],
+  "config": {
+    "id-field": true,
+    "prefixes": {
+      "schema": "http://schema.org/"
+    },
+    "nsmap": {
+      "tst": "http://example.com/test/"
+    },
+    "repo": "https://www.github.com/my/repo/",
+    "prefix": "tst"
+  }
+}
+

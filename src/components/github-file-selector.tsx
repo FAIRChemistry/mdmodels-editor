@@ -24,8 +24,8 @@ import {
 } from "@/lib/github-api";
 import { GitHubLogoIcon, FileIcon } from "@radix-ui/react-icons";
 import { Label } from "@/components/ui/label";
-import { useValidatorStore } from "@/lib/store";
-import { getErrors } from "@/lib/validation";
+import { useValidatorStore } from "@/lib/stores/validator-store";
+import { Tab } from "@/types";
 
 export function GitHubFileSelector() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +37,7 @@ export function GitHubFileSelector() {
   const [selectedFile, setSelectedFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { setErrors, setCode } = useValidatorStore();
+  const { setCode, setSelectedTab } = useValidatorStore();
 
   const debouncedRepoUrl = useDebounce(repoUrl, 500);
 
@@ -45,6 +45,19 @@ export function GitHubFileSelector() {
     const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
     return match ? { owner: match[1], repo: match[2] } : null;
   };
+
+  // Reset state when dialog opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      setRepoUrl("");
+      setBranches([]);
+      setSelectedBranch("");
+      setFiles([]);
+      setFileContent("");
+      setSelectedFile("");
+      setError("");
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const fetchBranches = async () => {
@@ -116,9 +129,8 @@ export function GitHubFileSelector() {
   }, [repoUrl, selectedBranch, selectedFile]);
 
   const handleImport = () => {
-    const errors = getErrors(fileContent);
-    setErrors(errors);
     setCode(fileContent);
+    setSelectedTab(Tab.Graph);
     setIsOpen(false);
   };
 
@@ -133,16 +145,14 @@ export function GitHubFileSelector() {
         <Button
           variant="outline"
           className="bg-transparent text-gray-400 hover:text-gray-300 border-none hover:bg-transparent hover:border-none"
+          title="Import from GitHub"
         >
-          <GitHubLogoIcon className="w-5 h-5 mr-2" />
-          Import
+          <GitHubLogoIcon className="w-1 h-5" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[900px] rounded-lg border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-lg bg-opacity-95">
         <DialogHeader>
-          <DialogTitle className="text-[#adbac7]">
-            Import Markdown File
-          </DialogTitle>
+          <DialogTitle className="text-white">Import Markdown File</DialogTitle>
           <DialogDescription className="text-[#768390]">
             Select a Markdown file from a GitHub repository to import as a data
             model.
