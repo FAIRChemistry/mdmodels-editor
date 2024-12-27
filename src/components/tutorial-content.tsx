@@ -11,23 +11,42 @@ import { EditorTab } from "./editor-tab";
 import BadgeGenerator from "@/components/badge-generator";
 import rehypeRaw from "rehype-raw";
 
+import editorGraph from "@/content/editor-graph.md?raw";
+import editorLinting from "@/content/editor-linting.md?raw";
+import editorOverview from "@/content/editor-overview.md?raw";
+import syntaxDefiningAnObject from "@/content/syntax-defining-an-object.md?raw";
+import syntaxExportingASchema from "@/content/syntax-export.md?raw";
+import syntaxOverview from "@/content/syntax-overview.md?raw";
+import syntaxSemanticInformation from "@/content/syntax-semantic-information.md?raw";
+import utilityBadgeGen from "@/content/utility-badge-gen.md?raw";
+
 const EDITOR_WIDTH = "650px";
 
 interface TutorialContentProps {
   selectedTutorial: string;
 }
 
+const contentMap = {
+  "editor-graph": editorGraph,
+  "editor-linting": editorLinting,
+  "editor-overview": editorOverview,
+  "syntax-defining-an-object": syntaxDefiningAnObject,
+  "syntax-export": syntaxExportingASchema,
+  "syntax-overview": syntaxOverview,
+  "syntax-semantic-information": syntaxSemanticInformation,
+  "utility-badge-gen": utilityBadgeGen,
+};
+
+console.log(contentMap);
+
 export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
   const [content, setContent] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch(`/content/${selectedTutorial}.md`)
-      .then((response) => response.text())
-      .then((text) => {
-        setContent(text);
-        containerRef.current?.scrollTo(0, 0);
-      });
+    // @ts-ignore
+    setContent(contentMap[selectedTutorial] || "");
+    containerRef.current?.scrollTo(0, 0);
   }, [selectedTutorial]);
 
   return (
