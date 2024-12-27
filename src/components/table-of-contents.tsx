@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { RiStackLine } from "react-icons/ri";
-import { useCode } from "@/lib/stores/validator-store";
+import {
+  useCode,
+  useSelectedTab,
+  useStructure,
+} from "@/lib/stores/validator-store";
 import { useReactFlow } from "reactflow";
+import { useEditorStore } from "@/lib/stores/editor-store";
+import { Tab } from "@/types";
 
 interface TOCItem {
   id: string;
@@ -13,6 +19,9 @@ function TableOfContents() {
   const [toc, setToc] = useState<TOCItem[]>([]);
   const code = useCode();
   const { setCenter, getNodes } = useReactFlow();
+  const jumpToLine = useEditorStore((state) => state.jumpToLine);
+  const selectedTab = useSelectedTab();
+  const structure = useStructure();
 
   useEffect(() => {
     const headingRegex = /^(#{1,3})\s+(.+)$/gm;
@@ -32,29 +41,45 @@ function TableOfContents() {
 
   const handleClick = (id: string) => {
     const cleanedName = id.replace(/\(.*?\)/g, "").trim();
-    const nodes = getNodes();
-    const node = nodes.find((n) => n.id === cleanedName);
-    if (!node) {
-      console.log("node not found");
-      return;
-    }
 
-    setCenter(
-      node.position.x + (node.width || 0) / 2,
-      node.position.y + (node.height || 0) / 2,
-      {
-        zoom: 1.1,
-        duration: 800,
-      }
-    );
+    switch (selectedTab) {
+      case Tab.Editor:
+        const line = structure?.objects.find((s) => s.name === cleanedName)
+          ?.position?.line;
+        if (line) {
+          jumpToLine(line);
+        }
+        break;
+
+      case Tab.Graph:
+        const nodes = getNodes();
+        const node = nodes.find((n) => n.id === cleanedName);
+        if (!node) {
+          console.log("node not found");
+          return;
+        }
+
+        setCenter(
+          node.position.x + (node.width || 0) / 2,
+          node.position.y + (node.height || 0) / 2,
+          {
+            zoom: 1.1,
+            duration: 800,
+          }
+        );
+        break;
+    }
   };
 
   return (
-    <div className="rounded-lg border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95">
-      <div className="border-b border-[#30363d] px-4 py-3">
+    <div className="rounded-l-lg h-full border-t border-b border-l border-[#282d33] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95">
+      <div className="border-b border-[#30363d] px-4 py-3 min-h-[3.1rem] ">
         <h2 className="text-sm font-medium text-gray-400">Table of Contents</h2>
       </div>
-      <div className="p-4">
+      <div
+        id="toc-container"
+        className="p-4 pl-6 overflow-scroll max-h-[calc(100vh-16rem)] scrollbar-hide"
+      >
         <div className="flex flex-col gap-1">
           {toc.map((item) => {
             if (item.level === 1) return null;

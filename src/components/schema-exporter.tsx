@@ -16,12 +16,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+// @ts-ignore
 import { useToast } from "@/hooks/use-toast";
 import { Templates } from "mdmodels";
 import { useValidatorStore } from "@/lib/stores/validator-store";
 import { convertModel } from "@/lib/mdutils";
 
 const TEMPLATE_MAPPING: Record<string, Templates> = {
+  markdown: Templates.Markdown,
   "json-schema": Templates.JsonSchema,
   xsd: Templates.XmlSchema,
   pydantic: Templates.PythonPydanticXML,
@@ -33,11 +35,10 @@ const TEMPLATE_MAPPING: Record<string, Templates> = {
 
 const schemaTypes = [
   {
-    value: "json-schema",
-    label: "JSON Schema",
-    extension: "json",
-    description:
-      "A vocabulary that allows you to annotate and validate JSON documents.",
+    value: "markdown",
+    label: "Markdown",
+    extension: "md",
+    description: "The current markdown code in the editor.",
   },
   {
     value: "xsd",
@@ -95,12 +96,18 @@ export default function SchemaExporter() {
     const schema = schemaTypes.find((s) => s.value === selectedSchema);
     if (!schema) return;
 
-    const content = convertModel(code, TEMPLATE_MAPPING[selectedSchema]);
+    let content: string;
+    if (selectedSchema !== "markdown") {
+      content = convertModel(code, TEMPLATE_MAPPING[selectedSchema]);
+    } else {
+      content = code;
+    }
+
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `schema.${schema.extension}`;
+    a.download = `schema.md`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

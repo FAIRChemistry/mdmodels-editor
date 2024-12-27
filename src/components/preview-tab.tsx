@@ -14,7 +14,7 @@ export function PreviewTab() {
   const MarkdownContent = useMemo(() => {
     return (
       <ReactMarkdown
-        className="prose prose-invert max-w-none text-white"
+        className="prose prose-invert max-w-none text-white px-10 pb-10 mt-0 pt-10 scrollbar-hide"
         components={{
           h1: ({ node, ...props }) => (
             <h1 className="text-2xl font-bold mb-4 text-white" {...props} />
@@ -26,7 +26,7 @@ export function PreviewTab() {
             <h3 className="text-lg font-bold mb-2 text-white" {...props} />
           ),
           p: ({ node, ...props }) => (
-            <p className="mb-4 text-gray-300" {...props} />
+            <p className="mb-4 text-gray-300 text-justify" {...props} />
           ),
           ul: ({ node, ...props }) => (
             <ul className="list-disc pl-6 mb-4 text-gray-300" {...props} />
@@ -80,5 +80,5 @@ export function PreviewTab() {
     );
   }, [content]); // Recompute only when `content` changes
 
-  return <ScrollArea className="h-full p-4">{MarkdownContent}</ScrollArea>;
+  return <ScrollArea className="h-full px-4">{MarkdownContent}</ScrollArea>;
 }

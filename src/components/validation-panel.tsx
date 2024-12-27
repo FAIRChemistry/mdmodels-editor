@@ -38,8 +38,8 @@ export function ValidationPanel() {
   };
 
   return (
-    <div className="rounded-lg border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95 ">
-      <div className="border-b border-[#30363d] px-4 py-3">
+    <div className="rounded-r-lg border-y border-r border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95">
+      <div className="border-b border-[#30363d] px-4 py-3 min-h-[3.1rem]">
         <h2 className="text-sm font-medium text-gray-400">
           Validation Results
         </h2>

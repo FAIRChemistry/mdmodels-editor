@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react";
 import ReactFlow, {
-  Node,
   Edge,
   ConnectionLineType,
   Background,
@@ -8,20 +7,20 @@ import ReactFlow, {
   useEdgesState,
   Controls,
   DefaultEdgeOptions,
-  useReactFlow,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { useSetCode, useValidatorStore } from "@/lib/stores/validator-store";
 import { createHandleId } from "@/lib/graph-utils";
-import useLayoutNodes from "@/hooks/use-layouted-nodes";
+import useLayoutNodes, { getLayoutedNodes } from "@/hooks/use-layouted-nodes";
 import { ObjectNode } from "./object-node";
 import {
   useIntermediateCode,
   useSetGraphEditorOpen,
   useSetIntermediateCode,
 } from "@/lib/stores/graph-store";
-import { MDModelSchema, SchemaAttribute, SchemaObject } from "@/types";
+import { ObjectNodeType } from "@/types";
 import AttributeEdge from "./attribute-edge";
+import { Attribute, DataModel, Object as ObjectType } from "mdmodels";
 
 // Node types
 const nodeTypes = {
@@ -44,7 +43,11 @@ const edgeOptions: DefaultEdgeOptions = {
 };
 
 // Add these new functions outside the component
-const createNode = (obj: any, objIndex: number, yOffset: number): Node => ({
+const createNode = (
+  obj: ObjectType,
+  objIndex: number,
+  yOffset: number
+): ObjectNodeType => ({
   id: obj.name,
   type: "objectNode",
   position: { x: objIndex * 400, y: yOffset },
@@ -52,26 +55,26 @@ const createNode = (obj: any, objIndex: number, yOffset: number): Node => ({
 });
 
 const createEdgesForObject = (
-  obj: SchemaObject,
-  structure: MDModelSchema
+  obj: ObjectType,
+  structure: DataModel
 ): Edge[] => {
   const edges: Edge[] = [];
 
-  obj.attributes.forEach((attr: SchemaAttribute) => {
+  obj.attributes.forEach((attr: Attribute) => {
     if (
       attr.dtypes.some((dtype: string) =>
-        structure?.objects.some((o: SchemaObject) => o.name === dtype)
+        structure?.objects.some((o: ObjectType) => o.name === dtype)
       )
     ) {
       attr.dtypes.forEach((dtype: string) => {
-        if (structure?.objects.some((o: SchemaObject) => o.name === dtype)) {
+        if (structure?.objects.some((o: ObjectType) => o.name === dtype)) {
           edges.push({
             id: `${obj.name}-${attr.name}-${dtype}`,
             source: obj.name,
             sourceHandle: createHandleId(obj.name, attr.name),
             targetHandle: createHandleId(dtype),
             target: dtype,
-            animated: true,
+            animated: false,
             data: {
               sourceObject: obj.name,
               targetObject: dtype,
@@ -92,11 +95,10 @@ export default function DataStandardGraph() {
   const intermediateCode = useIntermediateCode();
   const setCode = useSetCode();
   const setIntermediateCode = useSetIntermediateCode();
-  const { setCenter } = useReactFlow();
 
   // Create nodes and edges from the schema data
-  const createNodesAndEdges = useCallback(() => {
-    const nodes: Node[] = [];
+  const createNodesAndEdges = useCallback(async () => {
+    const nodes: ObjectNodeType[] = [];
     const edges: Edge[] = [];
     let yOffset = 0;
 
@@ -106,7 +108,7 @@ export default function DataStandardGraph() {
       edges.push(...createEdgesForObject(obj, structure));
     });
 
-    return { nodes, edges };
+    return { nodes: await getLayoutedNodes(nodes, edges), edges };
   }, [structure]);
 
   const setGraphEditorOpen = useSetGraphEditorOpen();
@@ -115,32 +117,27 @@ export default function DataStandardGraph() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
-    const { nodes: newNodes, edges: newEdges } = createNodesAndEdges();
+    const initializeGraph = async () => {
+      const { nodes: newNodes, edges: newEdges } = await createNodesAndEdges();
 
-    setNodes((prevNodes) => {
-      const existingNodesMap = Object.fromEntries(
-        prevNodes.map((node) => [node.id, node])
-      );
+      setNodes((prevNodes) => {
+        const existingNodesMap = Object.fromEntries(
+          prevNodes.map((node) => [node.id, node])
+        );
 
-      return newNodes.map((newNode) => {
-        const existingNode = existingNodesMap[newNode.id];
-        return existingNode
-          ? { ...newNode, position: existingNode.position }
-          : newNode;
+        return newNodes.map((newNode) => {
+          const existingNode = existingNodesMap[newNode.id];
+          return existingNode
+            ? { ...newNode, position: existingNode.position }
+            : newNode;
+        });
       });
-    });
 
-    setEdges(newEdges);
+      setEdges(newEdges);
+    };
 
-    // Center on first node if nodes exist
-    if (newNodes.length > 0) {
-      const firstNode = newNodes[0];
-      setCenter(firstNode.position.x, firstNode.position.y, {
-        zoom: 1,
-        duration: 800,
-      });
-    }
-  }, [structure, createNodesAndEdges, setNodes, setEdges, setCenter]);
+    initializeGraph();
+  }, [structure, createNodesAndEdges, setNodes, setEdges]);
 
   useLayoutNodes();
 
@@ -168,7 +165,6 @@ export default function DataStandardGraph() {
         nodesDraggable={true}
         maxZoom={1.2}
         minZoom={0.1}
-        fitView
       >
         <Background color="#30363D" />
         <Controls className="bg-[#0D1117] border-[#30363D] [&>button]:text-white [&>button]:border-[#30363D]" />

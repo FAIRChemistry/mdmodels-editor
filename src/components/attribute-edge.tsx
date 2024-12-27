@@ -27,15 +27,29 @@ export default function AttributeEdge({
     hoveredNode === data?.sourceObject || hoveredNode === data?.targetObject;
   const edgeStyle = {
     ...style,
-    filter: isHovered ? "drop-shadow(0 0 8px #ffffff)" : undefined,
-    strokeWidth: isHovered ? 2 : 1,
-    stroke: isHovered ? "#4ade80" : style.stroke || "#8B5CF6",
+    strokeWidth: isHovered ? 1.5 : 1,
+    stroke: isHovered ? "#01C6FF" : style.stroke || "#8B5CF6",
     transition: "all 0.15s ease-out",
+    strokeDasharray: isHovered ? "5,5" : "none",
+    animation: isHovered ? "dashdraw 0.5s linear infinite" : "none",
+    opacity: hoveredNode && !isHovered ? 0.5 : 1,
   };
 
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={edgeStyle} />
+      <style>
+        {`
+          @keyframes dashdraw {
+            from {
+              stroke-dashoffset: 10;
+            }
+            to {
+              stroke-dashoffset: 0;
+            }
+          }
+        `}
+      </style>
     </>
   );
 }

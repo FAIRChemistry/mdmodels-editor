@@ -1,14 +1,15 @@
-import { SchemaObject } from "@/types";
-import { Handle, NodeProps, Position, SetCenter } from "reactflow";
+import React from "react";
+import { Edge, Handle, NodeProps, Position } from "reactflow";
 import { Pencil } from "lucide-react";
 import { CroppedText } from "./cropped-text";
-import { createHandleId } from "@/lib/graph-utils";
-import React from "react";
+import { createHandleId, isRelatedTo } from "@/lib/graph-utils";
 import { createPortal } from "react-dom";
+import { Object as ObjectType } from "mdmodels";
 // @ts-ignore
 import { debounce } from "lodash";
 import {
   useGraphEditorOpen,
+  useHoveredNode,
   useIntermediateCode,
   useSetGraphEditorOpen,
   useSetHoveredNode,
@@ -16,6 +17,7 @@ import {
 } from "@/lib/stores/graph-store";
 import { useModelObject, useSetCode } from "@/lib/stores/validator-store";
 import { useReactFlow } from "reactflow";
+import { AttributeEdge } from "@/types";
 
 const EditorTab = React.lazy(() =>
   import("./editor-tab").then((mod) => ({
@@ -27,30 +29,49 @@ export const ObjectNode = React.memo(function ObjectNode({
   data,
   xPos,
   yPos,
-}: NodeProps<SchemaObject>) {
-  const { getNodes, setCenter } = useReactFlow();
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  const [showEditor, setShowEditor] = React.useState(false);
-  const [editorPosition, setEditorPosition] = React.useState({
-    top: 0,
-    left: 0,
-  });
-
+}: NodeProps<ObjectType>) {
   const nodeRef = React.useRef<HTMLDivElement>(null);
   const portalRoot = React.useMemo(
     () => document.getElementById("portal-root"),
     []
   );
 
+  const { getNodes, getEdges, setCenter, getViewport } = useReactFlow();
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [showEditor, setShowEditor] = React.useState(false);
+  const [isRelated, setIsRelated] = React.useState(false);
   const setHoveredNode = useSetHoveredNode();
+  const hoveredNode = useHoveredNode();
   const setIntermediateCode = useSetIntermediateCode();
   const intermediateCode = useIntermediateCode();
   const setCode = useSetCode();
   const modelObject = useModelObject(data.name);
   const setGraphEditorOpen = useSetGraphEditorOpen();
   const graphEditorOpen = useGraphEditorOpen();
-  const { getViewport } = useReactFlow();
   const nodes = getNodes();
+  const [editorPosition, setEditorPosition] = React.useState({
+    top: 0,
+    left: 0,
+  });
+
+  React.useEffect(() => {
+    if (!hoveredNode) {
+      setIsRelated(true);
+      return;
+    }
+    if (hoveredNode == data.name) {
+      setIsRelated(true);
+      return;
+    }
+    if (
+      hoveredNode &&
+      isRelatedTo(hoveredNode, data.name, getEdges() as Edge<AttributeEdge>[])
+    ) {
+      setIsRelated(true);
+    } else {
+      setIsRelated(false);
+    }
+  }, [hoveredNode, data.name]);
 
   const updatePosition = React.useMemo(
     () =>
@@ -125,7 +146,9 @@ export const ObjectNode = React.memo(function ObjectNode({
   return (
     <div
       ref={nodeRef}
-      className="relative group overflow-visible"
+      className={`relative group overflow-visible transition-opacity duration-200 ${
+        !isRelated ? "opacity-50" : ""
+      }`}
       onMouseEnter={(e) => {
         e.stopPropagation();
         setHoveredNode(data.name);
@@ -166,7 +189,7 @@ export const ObjectNode = React.memo(function ObjectNode({
           </div>
 
           {!isExpanded && (
-            <div>
+            <div className="transition-all duration-100">
               {modelObject?.attributes.map((attr: any, index: number) => (
                 <Handle
                   key={index}
@@ -183,14 +206,14 @@ export const ObjectNode = React.memo(function ObjectNode({
           {!isExpanded && (
             <button
               onClick={() => setIsExpanded(true)}
-              className="w-full px-4 py-2 text-xs text-gray-400 hover:text-gray-300 border-t border-gray-800"
+              className="w-full px-4 py-2 text-xs text-gray-400 hover:text-gray-300 border-t border-gray-800 transition-all duration-100"
             >
               Show {modelObject?.attributes.length} attributes
             </button>
           )}
 
           {isExpanded && (
-            <>
+            <div className="transition-all duration-200">
               <table className="w-full text-sm">
                 <tbody>
                   {modelObject?.attributes.map((attr: any, index: number) => (
@@ -228,11 +251,11 @@ export const ObjectNode = React.memo(function ObjectNode({
               </table>
               <button
                 onClick={() => setIsExpanded(false)}
-                className="w-full px-4 py-2 text-xs text-gray-400 hover:text-gray-300 border-t border-gray-800"
+                className="w-full px-4 py-2 text-xs text-gray-400 hover:text-gray-300 border-t border-gray-800 transition-all duration-100"
               >
                 Show less
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>

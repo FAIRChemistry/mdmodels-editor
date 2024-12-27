@@ -45,6 +45,7 @@
     "reactflow": "^11.11.4",
     "remark-gfm": "^4.0.0",
     "tailwind-merge": "^2.5.5",
+    "tailwind-scrollbar-hide": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
     "vite-plugin-top-level-await": "^1.4.4",
     "vite-plugin-wasm": "^3.4.1",

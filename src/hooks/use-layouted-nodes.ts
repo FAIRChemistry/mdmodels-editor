@@ -6,7 +6,8 @@ import {
   useNodesInitialized,
   useReactFlow,
 } from "reactflow";
-import { ObjectNodeType, SchemaObject } from "@/types";
+import { ObjectNodeType } from "@/types";
+import { Object as ObjectType } from "mdmodels";
 import { createHandleId } from "@/lib/graph-utils";
 
 const layoutOptions = {
@@ -26,7 +27,7 @@ const elk = new ELK();
 export const getLayoutedNodes = async (
   nodes: ObjectNodeType[],
   edges: Edge[]
-) => {
+): Promise<ObjectNodeType[]> => {
   const graph = {
     id: "root",
     layoutOptions,
@@ -88,7 +89,7 @@ export const getLayoutedNodes = async (
 export default function useLayoutNodes() {
   const nodesInitialized = useNodesInitialized();
   const { getNodes, getEdges, setNodes, fitView } =
-    useReactFlow<NodeProps<SchemaObject>>();
+    useReactFlow<NodeProps<ObjectType>>();
 
   useEffect(() => {
     if (nodesInitialized) {

@@ -31,8 +31,8 @@ const DataModelTutorialModal = lazy(() =>
 export const EMPTY_DOC_ERROR = "This model has no definitions.";
 const EDITOR_TABS = [
   { value: Tab.Editor, label: "Editor" },
-  { value: Tab.Preview, label: "Preview" },
   { value: Tab.Graph, label: "Graph" },
+  { value: Tab.Preview, label: "Preview" },
 ];
 
 export function MarkdownEditor() {
@@ -57,9 +57,13 @@ export function MarkdownEditor() {
   }, []);
 
   return (
-    <div className="rounded-lg border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95 h-full flex flex-col">
+    <div
+      className={`border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95 h-full flex flex-col ${
+        selectedTab === Tab.Graph ? "rounded-r-lg" : ""
+      }`}
+    >
       <Tabs defaultValue={selectedTab} className="flex-1 flex flex-col h-full">
-        <div className="flex items-center justify-between px-4 border-b border-[#30363d] shadow-lg">
+        <div className="flex items-center justify-between px-4 border-b border-[#30363d] shadow-lg min-h-[3.1rem]">
           <EditorTabs tabs={EDITOR_TABS} />
           <div className="flex flex-row gap-0">
             <Suspense fallback={null}>
@@ -76,7 +80,7 @@ export function MarkdownEditor() {
           ref={editorContainerRef}
         >
           <Suspense fallback={<div>Loading editor...</div>}>
-            <EditorTab height={`${editorHeight}px`} />
+            <EditorTab height={`${editorHeight}px`} isMain={true} />
           </Suspense>
         </TabsContent>
 

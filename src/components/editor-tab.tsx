@@ -5,6 +5,21 @@ import { lintGutter } from "@codemirror/lint";
 import { mdModelsLinter } from "@/lib/lint";
 import { memo, useRef, useCallback } from "react";
 import { useCode, useValidatorStore } from "@/lib/stores/validator-store";
+import { indentedLineWrap } from "@/lib/editor-utils";
+import { useEditorStore } from "@/lib/stores/editor-store";
+
+const themeExtension = {
+  ".indented-wrapped-line": {
+    borderLeft: "transparent solid calc(var(--indented))",
+  },
+  ".indented-wrapped-line:before": {
+    content: '""',
+    marginLeft: "calc(-1 * var(--indented))",
+  },
+  ".cm-gutters, .cm-activeLineGutter": {
+    background: "transparent",
+  },
+};
 
 export const editorExtensions = [
   markdown(),
@@ -17,11 +32,13 @@ export const editorExtensions = [
     ".cm-lineNumbers": {
       color: "#484F58",
     },
+    ...themeExtension,
   }),
+  indentedLineWrap,
   lintGutter(),
 ];
 
-const editorExtensionsWithoutGutter = editorExtensions.slice(0, 4);
+const editorExtensionsWithoutGutter = editorExtensions.slice(0, 5);
 
 interface EditorTabProps {
   height?: string;
@@ -32,6 +49,7 @@ interface EditorTabProps {
   setCodeAlt?: (value: string) => void;
   readonly?: boolean;
   code?: string;
+  isMain?: boolean;
 }
 
 export const EditorTab = memo(function EditorTab({
@@ -43,11 +61,16 @@ export const EditorTab = memo(function EditorTab({
   setCodeAlt,
   readonly = false,
   code,
+  isMain = false,
 }: EditorTabProps) {
   const globalCode = useCode();
   const displayCode = code ?? globalCode;
   const setCode = useValidatorStore((state) => state.setCode);
   const editorRef = useRef<EditorView | null>(null);
+
+  if (isMain) {
+    useEditorStore.setState({ editorRef });
+  }
 
   const handleChange = useCallback(
     (value: string) => {

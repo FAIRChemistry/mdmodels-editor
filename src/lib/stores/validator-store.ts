@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { getErrors } from "../validation";
-import { MDModelSchema, Tab, ValidationError } from "@/types";
+import { Tab, ValidationError } from "@/types";
 import { getMdModelStructure } from "../mdutils";
+import { DataModel } from "mdmodels";
 
 export const INITIAL_CODE = `---
 id-field: true
@@ -52,7 +53,7 @@ This is simple description of the test. It represents a basic data model with a 
 interface ValidatorStore {
   errors: ValidationError[];
   code: string;
-  structure: MDModelSchema | null;
+  structure: DataModel | null;
   selectedTab: Tab;
 
   // Actions
@@ -60,7 +61,7 @@ interface ValidatorStore {
   setSelectedTab: (tab: Tab) => void;
 
   // Computed values
-  getStructure: () => MDModelSchema | null;
+  getStructure: () => DataModel | null;
 }
 
 export const useValidatorStore = create<ValidatorStore>()(

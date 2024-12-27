@@ -1,5 +1,5 @@
-import { EdgeProps, type Node } from "reactflow";
-
+import { type Node } from "reactflow";
+import { Attribute, Object as ObjectType } from "mdmodels";
 /**
  * Represents a validation error with location and message details.
  *
@@ -74,16 +74,6 @@ interface CodeMirrorError {
 }
 
 /**
- * Represents MD-Models internal structure
- */
-interface MDModelSchema {
-  name: string;
-  objects: SchemaObject[];
-  enums: SchemaEnum[];
-  config: SchemaConfig;
-}
-
-/**
  * Represents XML configuration for an attribute
  */
 interface XMLConfig {
@@ -100,65 +90,9 @@ interface Option {
 }
 
 /**
- * Represents an attribute in a schema object
- */
-interface SchemaAttribute {
-  name: string;
-  multiple: boolean;
-  is_id: boolean;
-  dtypes: string[];
-  docstring: string;
-  options: Option[];
-  term: string | null;
-  required: boolean;
-  xml: XMLConfig;
-  is_enum: boolean;
-}
-
-/**
- * Represents a position in the source code
- */
-interface SourcePosition {
-  line: number;
-  column: { start: number; end: number };
-  offset: { start: number; end: number };
-}
-
-/**
- * Represents a schema object definition
- */
-interface SchemaObject {
-  name: string;
-  attributes: SchemaAttribute[];
-  docstring: string;
-  position: SourcePosition;
-}
-
-/**
- * Represents an enum definition with URI mappings
- */
-interface SchemaEnum {
-  name: string;
-  mappings: Record<string, string>;
-  docstring: string;
-  position: SourcePosition;
-}
-
-/**
- * Represents schema configuration
- */
-interface SchemaConfig {
-  "id-field": boolean;
-  prefixes: Record<string, string>;
-  nsmap: Record<string, string>;
-  repo: string;
-  prefix: string;
-}
-
-/**
  * Represents a node in the graph with schema object data
  */
-type ObjectNodeType = Node<SchemaObject, "objectNode">;
+type ObjectNodeType = Node<ObjectType, "objectNode">;
 
 /**
  * Represents the available tabs in the application UI
@@ -172,7 +106,7 @@ export enum Tab {
   Preview = "preview",
 }
 
-interface AttributeEdge extends SchemaAttribute {
+interface AttributeEdge extends Attribute {
   sourceObject: string;
   targetObject: string;
 }
@@ -182,11 +116,6 @@ export type {
   RSError,
   RSValidation,
   CodeMirrorError,
-  MDModelSchema,
-  SchemaObject,
-  SchemaAttribute,
-  SchemaEnum,
-  SchemaConfig,
   XMLConfig,
   Option,
   AttributeEdge,

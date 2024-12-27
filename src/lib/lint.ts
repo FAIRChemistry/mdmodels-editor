@@ -45,7 +45,7 @@ const mdModelsLinter = linter((view) => {
 });
 
 function findTypeLine(view: EditorView, line: number) {
-  for (let i = line; i < line + 10; i++) {
+  for (let i = line; i < line + 3; i++) {
     try {
       const lineText = view.state.doc.line(i).text;
       if (lineText.toLowerCase().trim().startsWith("- type:")) {
