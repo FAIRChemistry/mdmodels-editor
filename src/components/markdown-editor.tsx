@@ -5,6 +5,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { EditorTabs } from "./editor-tabs";
 import { Tab } from "@/types";
 import { useValidatorStore } from "@/lib/stores/validator-store";
+import NewDocumentButton from "./new-doc-button";
 
 // Lazy load components
 const EditorTab = lazy(() =>
@@ -23,7 +24,7 @@ const GitHubFileSelector = lazy(() =>
   }))
 );
 const DataModelTutorialModal = lazy(() =>
-  import("./data-model-tutorial-modal").then((module) => ({
+  import("./tutorial-modal").then((module) => ({
     default: module.DataModelTutorialModal,
   }))
 );
@@ -67,6 +68,7 @@ export function MarkdownEditor() {
           <EditorTabs tabs={EDITOR_TABS} />
           <div className="flex flex-row gap-0">
             <Suspense fallback={null}>
+              <NewDocumentButton />
               <GitHubFileSelector />
               <SchemaExporter />
               <DataModelTutorialModal />

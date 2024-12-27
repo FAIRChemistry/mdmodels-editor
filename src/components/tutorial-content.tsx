@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -8,6 +8,8 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
 import { EditorTab } from "./editor-tab";
+import BadgeGenerator from "@/components/badge-generator";
+import rehypeRaw from "rehype-raw";
 
 const EDITOR_WIDTH = "650px";
 
@@ -17,18 +19,28 @@ interface TutorialContentProps {
 
 export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
   const [content, setContent] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch(`/content/${selectedTutorial}.md`)
       .then((response) => response.text())
-      .then((text) => setContent(text));
+      .then((text) => {
+        setContent(text);
+        containerRef.current?.scrollTo(0, 0);
+      });
   }, [selectedTutorial]);
 
   return (
-    <div className="p-6 bg-[#0D1117] text-[#C9D1D9]">
+    <div
+      ref={containerRef}
+      className="pt-6 pb-60 px-10 bg-[#0D1117] text-[#C9D1D9] overflow-y-auto h-[calc(100vh-4rem)] text-justify hyphens-auto text-base leading-relaxed mx-1 scrollbar-hide"
+    >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={{
+          // @ts-ignore
+          badgegenerator: ({ node, ...props }) => <BadgeGenerator {...props} />,
           h1: ({ node, ...props }) => (
             <h1
               className="text-3xl font-semibold text-white mb-4 border-b border-[#30363D] pb-2"
@@ -37,7 +49,7 @@ export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
           ),
           h2: ({ node, ...props }) => (
             <h2
-              className="text-2xl font-semibold text-white mt-8 mb-4"
+              className="text-2xl font-semibold text-white mt-8 mb-4 border-b border-[#30363D] pb-2"
               {...props}
             />
           ),
@@ -78,7 +90,7 @@ export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
             return !inline && match ? (
               <div className="flex flex-row items-center justify-center my-10">
                 <div
-                  className={`shadow-xl bg-[#0D1117] border border-[#30363D] rounded-xl overflow-hidden w-[${EDITOR_WIDTH}]
+                  className={`shadow-xl bg-[#0D1117] border border-[#30363D] rounded-lg overflow-hidden w-[${EDITOR_WIDTH}]
                             [&_*]:!cursor-text [&_.cm-editor]:rounded-xl [&_.cm-scroller]:!overflow-auto`}
                 >
                   <EditorTab

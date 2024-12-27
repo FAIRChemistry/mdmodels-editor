@@ -21,6 +21,7 @@ import {
   getBranches,
   getMarkdownFiles,
   getFileContent,
+  parseRepoUrl,
 } from "@/lib/github-api";
 import { GitHubLogoIcon, FileIcon } from "@radix-ui/react-icons";
 import { Label } from "@/components/ui/label";
@@ -63,11 +64,6 @@ export function GitHubFileSelector() {
   const { setCode, setSelectedTab } = useValidatorStore();
 
   const debouncedRepoUrl = useDebounce(repoUrl, 500);
-
-  const parseRepoUrl = (url: string) => {
-    const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
-    return match ? { owner: match[1], repo: match[2] } : null;
-  };
 
   // Reset state when dialog opens/closes
   useEffect(() => {

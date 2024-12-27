@@ -11,6 +11,8 @@ import TableOfContents from "@/components/table-of-contents";
 import { Tab } from "./types";
 import { ReactFlowProvider } from "reactflow";
 import { useEffect } from "react";
+import { TourSteps } from "./lib/tour-config";
+import Tour from "./components/app-tour";
 
 export default function App() {
   const { selectedTab } = useValidatorStore();
@@ -51,12 +53,13 @@ export default function App() {
       <Background />
 
       <main className="relative w-full px-8 py-8">
-        <div className="text-start mb-6">
+        <div className="text-start mb-6 flex flex-row justify-between">
           <h1 className="text-2xl font-semibold text-white mb-4 ml-4 flex items-baseline">
             <RiStackLine className="mr-1 translate-y-[0.2rem]" />
             <span className="text-2xl ml-1 text-white">MD-Models</span>
             <span className="text-xl ml-2 text-gray-400 font-thin">Editor</span>
           </h1>
+          <Tour steps={TourSteps} />
         </div>
         <ReactFlowProvider>
           <div

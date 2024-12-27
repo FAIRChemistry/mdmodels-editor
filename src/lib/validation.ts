@@ -1,18 +1,24 @@
 import { EMPTY_DOC_ERROR } from "@/components/markdown-editor";
 import { ValidationError } from "@/types";
-import { CodeMirrorError, RSError, RSValidation } from "@/types";
-import { validate } from "mdmodels";
+import { CodeMirrorError, RSError } from "@/types";
+import {
+  validate,
+  Validator,
+  ValidationError as RSValidationError,
+} from "mdmodels";
 
 /**
- * Converts an RSError object to a ValidationError object.
+ * Converts an Validator object to a ValidationError object.
  *
- * @param error - The RSError object to convert.
+ * @param error - The Validator object to convert.
  * @returns A ValidationError object containing the converted error information.
  */
-export function mdErrorToValidationError(error: RSError): ValidationError {
+export function mdErrorToValidationError(
+  error: RSValidationError
+): ValidationError {
   const locationLine = `Line ${error.positions[0].line}, Column ${error.positions[0].column.start}`;
   return {
-    id: error.attribute,
+    id: error.attribute ?? "",
     location: locationLine,
     message: error.message,
     kind: "error",
@@ -47,7 +53,7 @@ export function mdErrorToCodeMirrorError(error: RSError): CodeMirrorError[] {
  * @returns An array of ValidationError objects containing any validation errors found
  */
 export function getErrors(code: string): ValidationError[] {
-  const validation: RSValidation = validate(code);
+  const validation: Validator = validate(code);
   const convertedErrors: ValidationError[] = convertErrors(validation);
 
   return convertedErrors;
@@ -60,7 +66,7 @@ export function getErrors(code: string): ValidationError[] {
  * @param validation - The RSValidation object containing validation errors
  * @returns An array of ValidationError objects containing the converted errors
  */
-export function convertErrors(validation: RSValidation): ValidationError[] {
+export function convertErrors(validation: Validator): ValidationError[] {
   const convertedErrors: ValidationError[] = [];
 
   for (const error of validation.errors) {

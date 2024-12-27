@@ -5,14 +5,18 @@ import { create } from "zustand";
 
 interface EditorStore {
   currentLine: number;
+  fontSize: number;
   setCurrentLine: (line: number) => void;
+  setFontSize: (size: number) => void;
   editorRef: MutableRefObject<EditorView | null>;
   jumpToLine: (line: number) => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
   currentLine: 0,
+  fontSize: 12,
   setCurrentLine: (line) => set({ currentLine: line }),
+  setFontSize: (size) => set({ fontSize: size }),
   editorRef: { current: null },
   jumpToLine: (line) => {
     const editorRef = useEditorStore.getState().editorRef;

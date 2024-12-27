@@ -5,46 +5,50 @@ import { Tab, ValidationError } from "@/types";
 import { getMdModelStructure } from "../mdutils";
 import { DataModel } from "mdmodels";
 
-export const INITIAL_CODE = `---
-id-field: true
-repo: "https://www.github.com/my/repo/"
-prefix: "tst"
-prefixes:
-  schema: http://schema.org/
-nsmap:
-  tst: http://example.com/test/
----
+export const INITIAL_CODE = `# MD-Models 
 
-### Test
+Welcome to the MD-Models editor! 
 
-This is simple description of the test. It represents a basic data model with a name identifier, a numeric value, and a reference to Test2 objects. The Test object demonstrates common data modeling patterns like identifiers, primitive types, and relationships between objects.
+## Getting Started
+
+- Unfamiliar with MD-Models? To learn more about MD-Models, please click on the question mark in the top right corner.
+- To import a model from a GitHub repository, click on the "GitHub" button in the top right corner.
+- To export your model to a file, click on the "Download" button in the top right corner.
+- Left to the editor, you can see the table of contents of your model. Click on an item to navigate to it.
+- Right to the editor, you can see validation errors and warnings.
+- Try out the graph editor by clicking on the "Graph" button in the top right corner.
+
+Looking for examples? Please click on the "GitHub" button in the top right corner and choose one of the examples.
+
+To get started, simply edit this text and start writing your own model!
+
+### Person
+
+This is a place to add description of the object.
 
 - __name__
-  - Type: Identifier
-  - Term: schema:hello
-  - Description: The name of the test.
-  - XML: @name
-- number
-  - Type: float
-  - Term: schema:one
-  - XML: @number
-  - Default: 1.0
-- test2
-  - Type: [Test2](#test2)[]
-  - Term: schema:something
-  - XML: SomeTest2
+  - Type: string
+  - Term: schema:name
+  - Description: The name of the person.
 
-### Test2
+- age
+  - Type: integer
+  - Term: schema:age
+  - Description: The age of the person.
 
-- names
-  - Type: string[]
-  - Term: schema:hello
-  - XML: name
-- number
-  - Type: float
-  - Term: schema:one
-  - XML: @number
-  - Minimum: 0
+- address
+  - Type: Address
+  - Term: schema:address
+  - Description: The address of the person.
+
+### Address
+
+This is a place to add description of the object.
+
+- street
+  - Type: string
+  - Term: schema:street
+  - Description: The street of the address.
 `;
 
 /**
@@ -55,6 +59,7 @@ interface ValidatorStore {
   code: string;
   structure: DataModel | null;
   selectedTab: Tab;
+  tourTaken: boolean;
 
   // Actions
   setCode: (code: string) => void;
@@ -71,6 +76,7 @@ export const useValidatorStore = create<ValidatorStore>()(
       code: INITIAL_CODE,
       structure: getMdModelStructure(INITIAL_CODE),
       selectedTab: Tab.Graph,
+      tourTaken: false,
 
       setCode: (code: string) => {
         set((state) => {
