@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 export const parseRepoUrl = (url: string) => {
   const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
   return match ? { owner: match[1], repo: match[2] } : null;
