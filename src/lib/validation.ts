@@ -5,7 +5,7 @@ import {
   validate,
   Validator,
   ValidationError as RSValidationError,
-} from "mdmodels";
+} from "mdmodels-core";
 
 /**
  * Converts an Validator object to a ValidationError object.

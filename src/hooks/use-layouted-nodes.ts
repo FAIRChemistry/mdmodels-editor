@@ -7,7 +7,7 @@ import {
   useReactFlow,
 } from "reactflow";
 import { ObjectNodeType } from "@/types";
-import { Object as ObjectType } from "mdmodels";
+import { Object as ObjectType } from "mdmodels-core";
 import { createHandleId } from "@/lib/graph-utils";
 
 const layoutOptions = {

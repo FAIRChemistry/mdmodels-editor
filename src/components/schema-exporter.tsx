@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 // @ts-ignore
 import { useToast } from "@/hooks/use-toast";
-import { Templates } from "mdmodels";
+import { Templates } from "mdmodels-core";
 import { useValidatorStore } from "@/lib/stores/validator-store";
 import { convertModel } from "@/lib/mdutils";
 
@@ -142,6 +142,7 @@ export default function SchemaExporter() {
         <Button
           variant="outline"
           className="bg-transparent text-gray-400 hover:text-gray-300 border-none hover:bg-transparent hover:border-none"
+          title="Export Data Model"
         >
           <Download className="h-4 w-4" />
         </Button>

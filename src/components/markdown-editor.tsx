@@ -68,10 +68,18 @@ export function MarkdownEditor() {
           <EditorTabs tabs={EDITOR_TABS} />
           <div className="flex flex-row gap-0">
             <Suspense fallback={null}>
-              <NewDocumentButton />
-              <GitHubFileSelector />
-              <SchemaExporter />
-              <DataModelTutorialModal />
+              <div id="new-document-button-container">
+                <NewDocumentButton />
+              </div>
+              <div id="github-file-selector-container">
+                <GitHubFileSelector />
+              </div>
+              <div id="schema-exporter-container">
+                <SchemaExporter />
+              </div>
+              <div id="data-model-tutorial-modal-container">
+                <DataModelTutorialModal />
+              </div>
             </Suspense>
           </div>
         </div>

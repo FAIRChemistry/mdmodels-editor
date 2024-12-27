@@ -10,6 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      buffer: "buffer/",
     },
   },
   optimizeDeps: {
@@ -21,9 +22,13 @@ export default defineConfig({
       // Enable esbuild polyfill plugins
       plugins: [
         NodeGlobalsPolyfillPlugin({
+          process: true,
           buffer: true,
         }),
       ],
     },
+  },
+  define: {
+    global: "globalThis",
   },
 });

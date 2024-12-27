@@ -16,6 +16,7 @@ export function EditorTabs({ tabs }: EditorTabsProps) {
     <TabsList className="h-12 bg-transparent border-none space-x-4 p-0">
       {tabs.map((tab) => (
         <TabsTrigger
+          id={`${tab.value}-tab`}
           key={tab.value}
           value={tab.value}
           onClick={() => setSelectedTab(tab.value)}

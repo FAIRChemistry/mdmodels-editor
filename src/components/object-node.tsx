@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 import { CroppedText } from "./cropped-text";
 import { createHandleId, isRelatedTo } from "@/lib/graph-utils";
 import { createPortal } from "react-dom";
-import { Object as ObjectType } from "mdmodels";
+import { Object as ObjectType } from "mdmodels-core";
 // @ts-ignore
 import { debounce } from "lodash";
 import {

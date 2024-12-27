@@ -1,5 +1,5 @@
 import { type Node } from "reactflow";
-import { Attribute, Object as ObjectType } from "mdmodels";
+import { Attribute, Object as ObjectType } from "mdmodels-core";
 /**
  * Represents a validation error with location and message details.
  *

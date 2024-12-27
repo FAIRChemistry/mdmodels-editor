@@ -20,7 +20,7 @@ import {
 } from "@/lib/stores/graph-store";
 import { ObjectNodeType } from "@/types";
 import AttributeEdge from "./attribute-edge";
-import { Attribute, DataModel, Object as ObjectType } from "mdmodels";
+import { Attribute, DataModel, Object as ObjectType } from "mdmodels-core";
 
 // Node types
 const nodeTypes = {

@@ -3,7 +3,7 @@ import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { getErrors } from "../validation";
 import { Tab, ValidationError } from "@/types";
 import { getMdModelStructure } from "../mdutils";
-import { DataModel } from "mdmodels";
+import { DataModel } from "mdmodels-core";
 
 export const INITIAL_CODE = `# MD-Models 
 
@@ -75,7 +75,7 @@ export const useValidatorStore = create<ValidatorStore>()(
       errors: getErrors(INITIAL_CODE),
       code: INITIAL_CODE,
       structure: getMdModelStructure(INITIAL_CODE),
-      selectedTab: Tab.Graph,
+      selectedTab: Tab.Editor,
       tourTaken: false,
 
       setCode: (code: string) => {

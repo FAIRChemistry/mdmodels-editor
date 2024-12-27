@@ -7,7 +7,7 @@ import {
   parse_model,
   Validator,
   DataModel,
-} from "mdmodels";
+} from "mdmodels-core";
 
 /**
  * Validates markdown model content using the mdmodels validator
