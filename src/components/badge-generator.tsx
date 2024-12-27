@@ -76,7 +76,7 @@ export default function BadgeGenerator() {
     const encodedRepo = encodeURIComponent(repoUrl || "");
     const encodedBranch = encodeURIComponent(branch || "");
     const encodedPath = encodeURIComponent(path || "");
-    return `http://mdmodels-editor.vercel.app/?repo=${encodedRepo}&branch=${encodedBranch}&path=${encodedPath}`;
+    return `http://mdmodels.vercel.app/?repo=${encodedRepo}&branch=${encodedBranch}&path=${encodedPath}`;
   };
 
   const getMarkdown = () => {
@@ -209,7 +209,7 @@ export default function BadgeGenerator() {
                 )}
               </Button>
             </div>
-            <pre className="font-mono text-sm bg-accent/50 p-3 rounded-md overflow-x-auto whitespace-pre-wrap break-all">
+            <pre className="font-mono text-sm p-3 rounded-md overflow-x-auto whitespace-pre-wrap break-all bg-[#22272e]">
               {getMarkdown()}
             </pre>
           </div>
