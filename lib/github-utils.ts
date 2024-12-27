@@ -1,5 +1,3 @@
-import { Buffer } from "buffer";
-
 export const parseRepoUrl = (url: string) => {
   const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
   return match ? { owner: match[1], repo: match[2] } : null;
@@ -105,6 +103,5 @@ export const getFileContent = async (
   }
 
   const data = await response.json();
-  // GitHub API returns content as base64 encoded string
-  return Buffer.from(data.content, "base64").toString("utf-8");
+  return atob(data.content);
 };
