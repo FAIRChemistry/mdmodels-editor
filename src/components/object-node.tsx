@@ -42,6 +42,7 @@ export const ObjectNode = React.memo(function ObjectNode({
     showEditor: false,
     isRelated: true,
     editorPosition: { top: 0, left: 0 },
+    isPositioned: false,
   });
 
   const nodes = React.useMemo(() => getNodes(), [getNodes]);
@@ -91,6 +92,7 @@ export const ObjectNode = React.memo(function ObjectNode({
           top: rect.top - portalRect.top,
           left: rect.right - portalRect.left + 20 * viewport.zoom,
         },
+        isPositioned: true,
       }));
     }, 5),
     [state.showEditor, getViewport, portalRoot]
@@ -196,6 +198,18 @@ export const ObjectNode = React.memo(function ObjectNode({
   const editorPortal = React.useMemo(() => {
     if (!state.showEditor || !portalRoot) return null;
 
+    if (!state.isPositioned) {
+      return createPortal(
+        <div
+          style={{
+            position: "absolute",
+            visibility: "hidden",
+          }}
+        />,
+        portalRoot
+      );
+    }
+
     return createPortal(
       <div
         style={{
@@ -204,6 +218,8 @@ export const ObjectNode = React.memo(function ObjectNode({
           left: `${state.editorPosition.left}px`,
           transform: `scale(${Math.sqrt(getViewport().zoom)})`,
           transformOrigin: "top left",
+          opacity: state.isPositioned ? 1 : 0,
+          transition: "opacity 150ms ease-in-out",
         }}
         className="nodrag nowheel shadow-xl w-[500px] h-[300px] bg-[#0D1117] 
                  border border-[#30363D] rounded-xl overflow-hidden
@@ -223,6 +239,7 @@ export const ObjectNode = React.memo(function ObjectNode({
   }, [
     state.showEditor,
     state.editorPosition,
+    state.isPositioned,
     data.position?.line,
     portalRoot,
     getViewport,
@@ -253,7 +270,7 @@ export const ObjectNode = React.memo(function ObjectNode({
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 rounded-xl blur-xl transition-all group-hover:blur-2xl" />
       <div className="relative bg-[#0D1117] text-white rounded-xl border border-[#30363D] pt-4 w-72 backdrop-blur-sm">
         <div
-          className="absolute -right-2 -top-2 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full p-0.5 cursor-pointer"
+          className="absolute -right-2 -top-2 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full p-0.5 cursor-pointer hover:scale-105 transition-all duration-200"
           onClick={handleOpenEditor}
         >
           <div className="bg-[#0D1117] rounded-full p-1">
