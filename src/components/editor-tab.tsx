@@ -2,7 +2,7 @@ import CodeMirror, { EditorSelection, EditorView } from "@uiw/react-codemirror";
 import { markdown } from "@codemirror/lang-markdown";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import { lintGutter } from "@codemirror/lint";
-import { mdModelsLinter } from "@/lib/lint";
+import { highlight, mdModelsLinter } from "@/lib/lint";
 import { memo, useRef, useCallback, useMemo, useState, useEffect } from "react";
 import { useCode, useValidatorStore } from "@/lib/stores/validator-store";
 import { indentedLineWrap } from "@/lib/editor-utils";
@@ -20,6 +20,12 @@ const themeExtension = {
   ".cm-gutters, .cm-activeLineGutter": {
     background: "transparent",
   },
+  ".cm-option-highlight": {
+    color: "#ffd2a8",
+  },
+  ".cm-object-content-highlight": {
+    color: "#a8c6ff",
+  },
 };
 
 export const editorExtensions = [
@@ -36,10 +42,14 @@ export const editorExtensions = [
     ...themeExtension,
   }),
   indentedLineWrap,
+  highlight(),
   lintGutter(),
 ];
 
-const editorExtensionsWithoutGutter = editorExtensions.slice(0, 5);
+const editorExtensionsWithoutGutter = editorExtensions.slice(
+  0,
+  editorExtensions.length - 1
+);
 
 interface EditorTabProps {
   height?: string;
