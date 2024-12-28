@@ -13,8 +13,6 @@ import { Tab } from "./types";
 import { ReactFlowProvider } from "reactflow";
 import { useEffect } from "react";
 import { getFileContent, parseRepoUrl } from "./lib/github-api";
-// import { TourSteps } from "./lib/tour-config";
-// import Tour from "./components/app-tour";
 
 export default function App() {
   const { selectedTab } = useValidatorStore();
@@ -41,6 +39,8 @@ export default function App() {
         }
       );
     }
+
+    window.history.replaceState({}, "", window.location.pathname);
   }, []);
 
   useEffect(() => {
