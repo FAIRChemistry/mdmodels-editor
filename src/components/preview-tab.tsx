@@ -2,19 +2,17 @@ import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCode } from "@/lib/stores/validator-store";
-import matter from "gray-matter";
+import remarkFrontmatter from "remark-frontmatter";
 
 export function PreviewTab() {
   const code = useCode();
-
-  // Memoize the parsing of the code to extract content
-  const { content } = useMemo(() => matter(code), [code]);
 
   // Memoize the ReactMarkdown component to prevent re-rendering
   const MarkdownContent = useMemo(() => {
     return (
       <ReactMarkdown
         className="prose prose-invert max-w-none text-white px-10 pb-10 mt-0 pt-10 scrollbar-hide"
+        remarkPlugins={[remarkFrontmatter]}
         components={{
           h1: ({ node, ...props }) => (
             <h1 className="text-2xl font-bold mb-4 text-white" {...props} />
@@ -75,10 +73,10 @@ export function PreviewTab() {
           ),
         }}
       >
-        {content}
+        {code}
       </ReactMarkdown>
     );
-  }, [content]); // Recompute only when `content` changes
+  }, [code]); // Recompute only when `content` changes
 
   return <ScrollArea className="h-full px-4">{MarkdownContent}</ScrollArea>;
 }

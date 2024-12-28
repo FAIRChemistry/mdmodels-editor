@@ -26,7 +26,6 @@ import {
 import { GitHubLogoIcon, FileIcon } from "@radix-ui/react-icons";
 import { Label } from "@/components/ui/label";
 import { useValidatorStore } from "@/lib/stores/validator-store";
-import { Tab } from "@/types";
 import { Badge } from "@/components/ui/badge";
 
 interface GitHubExample {
@@ -61,7 +60,7 @@ export function GitHubFileSelector() {
   const [selectedFile, setSelectedFile] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { setCode, setSelectedTab } = useValidatorStore();
+  const { setCode } = useValidatorStore();
 
   const debouncedRepoUrl = useDebounce(repoUrl, 500);
 
@@ -149,7 +148,6 @@ export function GitHubFileSelector() {
 
   const handleImport = () => {
     setCode(fileContent);
-    setSelectedTab(Tab.Graph);
     setIsOpen(false);
   };
 
@@ -170,7 +168,6 @@ export function GitHubFileSelector() {
           example.branch
         );
         setCode(content);
-        setSelectedTab(Tab.Graph);
         setIsOpen(false);
       } catch (err) {
         setError(`Error loading ${example.name} example`);

@@ -1,10 +1,15 @@
-import Graph from "./model-graph";
+import { lazy, memo } from "react";
 
-export function GraphTab() {
+const Graph = lazy(() => import("./model-graph"));
+const MemoizedGraph = memo(Graph);
+
+export const GraphTab: React.FC = memo(() => {
   return (
     <div className="h-full w-full overflow-hidden">
-      <Graph />
+      <MemoizedGraph />
       <div id="portal-root" className="relative" />
     </div>
   );
-}
+});
+
+GraphTab.displayName = "GraphTab";
