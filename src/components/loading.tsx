@@ -6,7 +6,7 @@ interface LoadingProps {
 
 export default function Loading({ message }: LoadingProps) {
   return (
-    <div className="min-h-[400px] w-full flex flex-col items-center justify-center bg-[#0d1117] text-white p-4">
+    <div className="min-h-[400px] w-full flex flex-col items-center justify-center bg-transparent text-white p-4">
       <div className="text-center space-y-4 mb-8">
         <h2 className="text-2xl font-semibold">{message}</h2>
         <p className="text-sm text-zinc-400">
