@@ -6,6 +6,7 @@ import { EditorTabs } from "./editor-tabs";
 import { Tab } from "@/types";
 import { useValidatorStore } from "@/lib/stores/validator-store";
 import NewDocumentButton from "./new-doc-button";
+import Loading from "./loading";
 
 // Lazy load components
 const EditorTab = lazy(() =>
@@ -89,19 +90,19 @@ export function MarkdownEditor() {
           className="flex-1 mt-0 h-full"
           ref={editorContainerRef}
         >
-          <Suspense fallback={<div>Loading editor...</div>}>
+          <Suspense fallback={<Loading message="Loading editor..." />}>
             <EditorTab height={`${editorHeight}px`} isMain={true} />
           </Suspense>
         </TabsContent>
 
         <TabsContent value={Tab.Preview} className="flex-1 mt-0 h-full">
-          <Suspense fallback={<div>Loading preview...</div>}>
+          <Suspense fallback={<Loading message="Loading preview..." />}>
             <PreviewTab />
           </Suspense>
         </TabsContent>
 
         <TabsContent value={Tab.Graph} className="flex-1 mt-0 h-full">
-          <Suspense fallback={<div>Loading graph...</div>}>
+          <Suspense fallback={<Loading message="Loading graph..." />}>
             <GraphTab />
           </Suspense>
         </TabsContent>

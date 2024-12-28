@@ -22,6 +22,7 @@ import {
 import { ObjectNodeType } from "@/types";
 import AttributeEdge from "./attribute-edge";
 import { Attribute, DataModel, Object as ObjectType } from "mdmodels-core";
+import Loading from "./loading";
 
 const nodeTypes = {
   objectNode: ObjectNode,
@@ -171,7 +172,7 @@ export default function DataStandardGraph() {
 
   return (
     <div className="w-full h-full bg-[#0D1117] rounded-md overflow-visible">
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading message="Loading graph..." />}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

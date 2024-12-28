@@ -18,6 +18,7 @@ import {
 import { useModelObject, useSetCode } from "@/lib/stores/validator-store";
 import { useReactFlow } from "reactflow";
 import { AttributeEdge } from "@/types";
+import Loading from "./loading";
 
 const EditorTab = React.lazy(() =>
   import("./editor-tab").then((mod) => ({
@@ -225,7 +226,7 @@ export const ObjectNode = React.memo(function ObjectNode({
                  border border-[#30363D] rounded-xl overflow-hidden
                  [&_*]:!cursor-text [&_.cm-editor]:rounded-xl [&_.cm-scroller]:!overflow-auto"
       >
-        <React.Suspense fallback={<div>Loading...</div>}>
+        <React.Suspense fallback={<Loading message="Loading editor..." />}>
           <EditorTab
             className="text-xs"
             height="300px"
