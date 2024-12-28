@@ -78,7 +78,7 @@ function TableOfContents() {
       </div>
       <div
         id="toc-container"
-        className="p-4 pl-6 overflow-scroll max-h-[calc(100vh-16rem)] scrollbar-hide"
+        className="p-4 pl-6 overflow-scroll max-h-[calc(100vh-12rem)] scrollbar-hide"
       >
         <div className="flex flex-col gap-1">
           {toc.map((item) => {
