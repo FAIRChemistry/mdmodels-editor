@@ -18,10 +18,14 @@ export default function App() {
   const { selectedTab } = useValidatorStore();
   const code = useCode();
   const setCode = useSetCode();
+  const { setTutorialOpen } = useValidatorStore();
   const structure = useStructure();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    if (window.location.pathname === "/about") {
+      setTutorialOpen(true);
+    }
+    const params = new URLSearchParams(window.location.pathname);
     const repo = params.get("repo");
 
     if (!repo) return;

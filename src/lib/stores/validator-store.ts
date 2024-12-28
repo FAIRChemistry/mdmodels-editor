@@ -15,6 +15,8 @@ interface ValidatorStore {
   structure: DataModel | null;
   selectedTab: Tab;
   tourTaken: boolean;
+  tutorialOpen: boolean;
+  setTutorialOpen: (open: boolean) => void;
 
   // Actions
   setCode: (code: string) => void;
@@ -32,6 +34,8 @@ export const useValidatorStore = create<ValidatorStore>()(
       structure: getMdModelStructure(INITIAL_CODE),
       selectedTab: Tab.Editor,
       tourTaken: false,
+      tutorialOpen: false,
+      setTutorialOpen: (open: boolean) => set({ tutorialOpen: open }),
 
       setCode: (code: string) => {
         set((state) => {

@@ -41,7 +41,7 @@ function TutorialSection({
   return (
     <>
       <div
-        className={`mt-2 cursor-pointer transition-colors mb-2 text-sm text-[#727a82]`}
+        className={`mt-2 cursor-pointer transition-colors mb-2 text-sm text-[#727a82] border-none`}
       >
         {title}
       </div>
@@ -50,7 +50,7 @@ function TutorialSection({
           <li key={doc.id} className="flex-shrink-0 md:flex-shrink">
             <Button
               variant="ghost"
-              className={`w-full justify-start text-sm rounded-md ${
+              className={`w-full justify-start border-0 text-sm rounded-md ${
                 selectedTutorial === doc.id
                   ? "text-[#1F6FEB] hover:bg-[#30363D] hover:text-[#1F6FEB]"
                   : "text-[#C9D1D9] hover:bg-[#30363D] hover:text-[#C9D1D9]"
