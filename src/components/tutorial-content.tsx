@@ -38,8 +38,6 @@ const contentMap = {
   "utility-badge-gen": utilityBadgeGen,
 };
 
-console.log(contentMap);
-
 export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
   const [content, setContent] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);

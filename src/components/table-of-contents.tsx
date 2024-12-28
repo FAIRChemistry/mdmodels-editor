@@ -55,7 +55,6 @@ function TableOfContents() {
         const nodes = getNodes();
         const node = nodes.find((n) => n.id === cleanedName);
         if (!node) {
-          console.log("node not found");
           return;
         }
 
