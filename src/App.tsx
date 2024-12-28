@@ -22,11 +22,13 @@ export default function App() {
   const structure = useStructure();
 
   useEffect(() => {
-    if (window.location.pathname === "/about") {
-      setTutorialOpen(true);
-    }
-    const params = new URLSearchParams(window.location.pathname);
+    const params = new URLSearchParams(window.location.search);
     const repo = params.get("repo");
+
+    if (params.has("about")) {
+      setTutorialOpen(true);
+      return;
+    }
 
     if (!repo) return;
     const repoInfo = parseRepoUrl(repo);
@@ -37,14 +39,15 @@ export default function App() {
     const path = params.get("path");
 
     if (repo && branch && path) {
-      getFileContent(repoInfo.owner, repoInfo.repo, path, branch).then(
-        (content) => {
+      getFileContent(repoInfo.owner, repoInfo.repo, path, branch)
+        .then((content) => {
           setCode(content);
-        }
-      );
+          window.history.replaceState({}, "", window.location.pathname);
+        })
+        .catch((error) => {
+          console.error("Failed to load file content:", error);
+        });
     }
-
-    window.history.replaceState({}, "", window.location.pathname);
   }, []);
 
   useEffect(() => {
