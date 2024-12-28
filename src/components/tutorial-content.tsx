@@ -19,6 +19,7 @@ import syntaxExportingASchema from "@/content/syntax-export.md?raw";
 import syntaxOverview from "@/content/syntax-overview.md?raw";
 import syntaxSemanticInformation from "@/content/syntax-semantic-information.md?raw";
 import utilityBadgeGen from "@/content/utility-badge-gen.md?raw";
+import { RiStackLine } from "react-icons/ri";
 
 const EDITOR_WIDTH = "650px";
 
@@ -62,24 +63,24 @@ export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
           badgegenerator: ({ node, ...props }) => <BadgeGenerator {...props} />,
           h1: ({ node, ...props }) => (
             <h1
-              className="text-3xl font-semibold text-white mb-4 border-b border-[#30363D] pb-2"
+              className="w-full border-b border-[#30363D] text-3xl font-bold mb-7 pb-2"
               {...props}
             />
           ),
           h2: ({ node, ...props }) => (
-            <h2
-              className="text-2xl font-semibold text-white mt-8 mb-4 border-b border-[#30363D] pb-2"
-              {...props}
-            />
+            <div className="flex flex-row items-center w-full border-b border-[#30363D] pb-2 mt-8 mb-4 gap-2">
+              <RiStackLine className="text-gray-300 h-5 w-5" />
+              <h2 className="text-2xl font-semibold text-white" {...props} />
+            </div>
           ),
           h3: ({ node, ...props }) => (
             <h3
-              className="text-xl font-semibold text-white mt-6 mb-3"
+              className="text-xl font-semibold text-white mt-6 mb-4"
               {...props}
             />
           ),
           p: ({ node, ...props }) => (
-            <p className="text-[#C9D1D9] mb-4" {...props} />
+            <p className="text-[#C9D1D9] mb-4 leading-8" {...props} />
           ),
           ul: ({ node, ...props }) => (
             <ul
@@ -89,7 +90,7 @@ export function TutorialContent({ selectedTutorial }: TutorialContentProps) {
           ),
           ol: ({ node, ...props }) => (
             <ol
-              className="list-decimal list-inside space-y-2 text-[#C9D1D9] mb-4 pl-4"
+              className="list-decimal space-y-2 text-[#C9D1D9] mb-4 pl-8"
               {...props}
             />
           ),
