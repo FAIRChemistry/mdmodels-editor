@@ -6,26 +6,41 @@ import {
   useValidatorStore,
   useCode,
   useStructure,
+  useSetCode,
 } from "@/lib/stores/validator-store";
 import TableOfContents from "@/components/table-of-contents";
 import { Tab } from "./types";
 import { ReactFlowProvider } from "reactflow";
 import { useEffect } from "react";
+import { getFileContent, parseRepoUrl } from "./lib/github-api";
 // import { TourSteps } from "./lib/tour-config";
 // import Tour from "./components/app-tour";
 
 export default function App() {
   const { selectedTab } = useValidatorStore();
   const code = useCode();
+  const setCode = useSetCode();
   const structure = useStructure();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const repo = params.get("repo");
+
+    if (!repo) return;
+    const repoInfo = parseRepoUrl(repo);
+
+    if (!repoInfo) return;
+
     const branch = params.get("branch");
     const path = params.get("path");
 
-    console.log({ repo, branch, path });
+    if (repo && branch && path) {
+      getFileContent(repoInfo.owner, repoInfo.repo, path, branch).then(
+        (content) => {
+          setCode(content);
+        }
+      );
+    }
   }, []);
 
   useEffect(() => {
@@ -60,19 +75,19 @@ export default function App() {
             <span className="text-xl ml-2 text-gray-400 font-thin">Editor</span>
           </h1>
         </div>
-        <ReactFlowProvider>
-          <div
-            className={`grid grid-cols-1 h-[calc(100vh-10rem)] min-h-[calc(100vh-10rem)] ${
-              selectedTab === Tab.Graph
-                ? "md:grid-cols-[250px,1fr]"
-                : "md:grid-cols-[250px,1fr,330px]"
-            } gap-0 shadow-lg`}
-          >
+        <div
+          className={`grid grid-cols-1 h-[calc(100vh-10rem)] min-h-[calc(100vh-10rem)] ${
+            selectedTab === Tab.Graph
+              ? "md:grid-cols-[250px,1fr]"
+              : "md:grid-cols-[250px,1fr,330px]"
+          } gap-0 shadow-lg`}
+        >
+          <ReactFlowProvider>
             <TableOfContents />
             <MarkdownEditor />
             {selectedTab !== Tab.Graph && <ValidationPanel />}
-          </div>
-        </ReactFlowProvider>
+          </ReactFlowProvider>
+        </div>
       </main>
     </div>
   );
