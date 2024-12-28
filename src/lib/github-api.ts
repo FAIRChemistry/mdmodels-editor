@@ -7,7 +7,9 @@ const octokit = new Octokit();
  * @param url - The GitHub repository URL to parse
  * @returns An object containing owner and repo names, or null if URL is invalid
  */
-export function parseRepoUrl(url: string) {
+export function parseRepoUrl(
+  url: string
+): { owner: string; repo: string } | null {
   const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
   return match ? { owner: match[1], repo: match[2] } : null;
 }
