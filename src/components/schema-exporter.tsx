@@ -41,6 +41,13 @@ const schemaTypes = [
     description: "The current markdown code in the editor.",
   },
   {
+    value: "json-schema",
+    label: "JSON Schema",
+    extension: "json",
+    description:
+      "A JSON Schema is a JSON-based format for defining the structure of JSON data.",
+  },
+  {
     value: "xsd",
     label: "XSD",
     extension: "xsd",
