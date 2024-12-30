@@ -4,6 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCode } from "@/lib/stores/validator-store";
 import remarkFrontmatter from "remark-frontmatter";
 import { cleanObjectTitle } from "@/lib/mdutils";
+import { Badge } from "./ui/badge";
 
 export function PreviewTab() {
   const code = useCode();
@@ -41,7 +42,50 @@ export function PreviewTab() {
               <ol className="list-decimal pl-6 mb-4 text-gray-300" {...props} />
             ),
             li: ({ node, ...props }) => (
-              <li className="mb-1 text-gray-300" {...props} />
+              <li className="mb-1 text-gray-300">
+                {(() => {
+                  const content = props.children?.toString() || "";
+                  const labelMatches = content.match(
+                    /^(description|Description|\w+):\s+(.+)$/
+                  );
+
+                  if (labelMatches) {
+                    const [_, label, value] = labelMatches;
+                    if (label.toLowerCase() === "description") {
+                      return (
+                        <span>
+                          Description: <span className="italic">{value}</span>
+                        </span>
+                      );
+                    }
+                    return (
+                      <span>
+                        {label}:{" "}
+                        <Badge
+                          variant="secondary"
+                          className="cursor-pointer hover:opacity-80"
+                          onClick={() => {
+                            const element = document.getElementById(
+                              `preview-${cleanObjectTitle(value).replace(
+                                "[]",
+                                ""
+                              )}`
+                            );
+                            element?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                          }}
+                        >
+                          {value}
+                        </Badge>
+                      </span>
+                    );
+                  }
+
+                  return props.children;
+                })()}
+              </li>
             ),
             a: ({ node, ...props }) => (
               <a className="text-blue-400 hover:underline" {...props} />
