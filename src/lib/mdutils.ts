@@ -66,3 +66,12 @@ export function getMdModelStructure(content: string): DataModel | null {
     return null;
   }
 }
+
+/**
+ * Cleans an object title by removing parenthetical content and trimming whitespace
+ * @param title The object title string to clean
+ * @returns The cleaned title with parentheses and their contents removed and whitespace trimmed
+ */
+export function cleanObjectTitle(title: string): string {
+  return title.replace(/\(.*?\)/g, "").trim();
+}

@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCode } from "@/lib/stores/validator-store";
 import remarkFrontmatter from "remark-frontmatter";
+import { cleanObjectTitle } from "@/lib/mdutils";
 
 export function PreviewTab() {
   const code = useCode();
@@ -21,7 +22,13 @@ export function PreviewTab() {
             <h2 className="text-xl font-bold mb-3 text-white" {...props} />
           ),
           h3: ({ node, ...props }) => (
-            <h3 className="text-lg font-bold mb-2 text-white" {...props} />
+            <h3
+              id={`preview-${cleanObjectTitle(
+                props.children?.toString() ?? ""
+              )}`}
+              className="text-lg font-bold mb-2 text-white"
+              {...props}
+            />
           ),
           p: ({ node, ...props }) => (
             <p className="mb-4 text-gray-300 text-justify" {...props} />

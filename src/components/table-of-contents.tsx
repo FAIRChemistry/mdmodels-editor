@@ -8,6 +8,7 @@ import {
 import { useReactFlow } from "reactflow";
 import { useEditorStore } from "@/lib/stores/editor-store";
 import { Tab } from "@/types";
+import { cleanObjectTitle } from "@/lib/mdutils";
 
 interface TOCItem {
   id: string;
@@ -40,9 +41,21 @@ function TableOfContents() {
   }, [code]);
 
   const handleClick = (id: string) => {
-    const cleanedName = id.replace(/\(.*?\)/g, "").trim();
+    const cleanedName = cleanObjectTitle(id);
 
     switch (selectedTab) {
+      case Tab.Preview:
+        const previewElement = document.getElementById(
+          `preview-${cleanedName}`
+        );
+        if (previewElement) {
+          previewElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "start",
+          });
+        }
+        break;
       case Tab.Editor:
         const line = structure?.objects.find((s) => s.name === cleanedName)
           ?.position?.line;
