@@ -43,19 +43,18 @@ function TableOfContents() {
   const handleClick = (id: string) => {
     const cleanedName = cleanObjectTitle(id);
 
+    if (selectedTab === Tab.Preview) {
+      const element = document.getElementById(`preview-${cleanedName}`);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+      return;
+    }
+
     switch (selectedTab) {
-      case Tab.Preview:
-        const previewElement = document.getElementById(
-          `preview-${cleanedName}`
-        );
-        if (previewElement) {
-          previewElement.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "start",
-          });
-        }
-        break;
       case Tab.Editor:
         const line = structure?.objects.find((s) => s.name === cleanedName)
           ?.position?.line;
@@ -104,13 +103,18 @@ function TableOfContents() {
                     : "text-[#c9d1d9] hover:text-[#58a6ff]"
                 }`}
                 style={{ marginLeft: `${(item.level - 2) * 12}px` }}
-                onClick={
-                  item.level === 3 ? () => handleClick(item.text) : undefined
-                }
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (item.level === 3) {
+                    handleClick(item.text);
+                  }
+                }}
               >
                 <div className="flex items-center gap-1">
                   {item.level === 3 && <RiStackLine className="h-4 w-4" />}
-                  <span>{item.text.replace(/\(.*?\)/g, "").trim()}</span>
+                  <a href={`#preview-${item.id}`}>
+                    {item.text.replace(/\(.*?\)/g, "").trim()}
+                  </a>
                 </div>
               </div>
             );

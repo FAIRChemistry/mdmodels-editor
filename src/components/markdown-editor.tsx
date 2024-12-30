@@ -60,12 +60,12 @@ export function MarkdownEditor() {
 
   return (
     <div
-      className={`border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95 h-full flex flex-col ${
+      className={`border border-[#30363d] bg-[#0d1117] overflow-hidden backdrop-blur-sm bg-opacity-95 h-full flex flex-col relative ${
         selectedTab === Tab.Graph ? "rounded-r-lg" : ""
       }`}
     >
       <Tabs defaultValue={selectedTab} className="flex-1 flex flex-col h-full">
-        <div className="flex items-center justify-between px-4 border-b border-[#30363d] shadow-lg min-h-[3.1rem]">
+        <div className="flex items-center justify-between px-4 border-b border-[#30363d] shadow-lg min-h-[3.1rem] sticky top-0 z-10 bg-[#0d1117]">
           <EditorTabs tabs={EDITOR_TABS} />
           <div className="flex flex-row gap-0">
             <Suspense fallback={null}>
