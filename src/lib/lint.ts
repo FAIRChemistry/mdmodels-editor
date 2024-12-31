@@ -43,7 +43,7 @@ const mdModelsLinter = linter((view) => {
           }
 
           const startOffset = startLine.from + columnStart - 1;
-          const endOffset = startLine.from + columnEnd - 1;
+          const endOffset = startLine.from + columnEnd - 2;
           diagnostics.push({
             from: startOffset,
             to: endOffset,
