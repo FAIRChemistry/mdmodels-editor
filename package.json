@@ -34,7 +34,7 @@
     "elkjs": "^0.9.3",
     "lodash": "^4.17.21",
     "lucide-react": "^0.468.0",
-    "mdmodels-core": "^0.1.8",
+    "mdmodels-core": "^0.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
