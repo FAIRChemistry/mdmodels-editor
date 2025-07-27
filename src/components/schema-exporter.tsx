@@ -220,7 +220,7 @@ const getLanguageExtension = (schemaType: string) => {
 };
 
 export default function SchemaExporter() {
-  const [selectedSchema, setSelectedSchema] = useState<string | undefined>();
+  const [selectedSchema, setSelectedSchema] = useState<string | undefined>("markdown");
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
   const { code } = useValidatorStore();
@@ -344,16 +344,16 @@ export default function SchemaExporter() {
           {/* Left side - Controls */}
           <div className="w-[380px] flex-shrink-0">
             <div className="grid gap-4">
-              <Select onValueChange={setSelectedSchema}>
+              <Select onValueChange={setSelectedSchema} value={selectedSchema}>
                 <SelectTrigger className="w-full border-[#444c56] bg-[#22272e] text-white">
                   <SelectValue placeholder="Select target" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#22272e] border-[#444c56]">
                   <SelectGroup>
                     <SelectLabel className="text-[#768390] px-2 py-1.5 text-sm font-medium">
-                      Formats
+                      Programming Languages
                     </SelectLabel>
-                    {formatTypes.map((schema) => (
+                    {programmingLanguageTypes.map((schema) => (
                       <SelectItem
                         key={schema.value}
                         value={schema.value}
@@ -365,9 +365,9 @@ export default function SchemaExporter() {
                   </SelectGroup>
                   <SelectGroup>
                     <SelectLabel className="text-[#768390] px-2 py-1.5 text-sm font-medium">
-                      Programming Languages
+                      Formats
                     </SelectLabel>
-                    {programmingLanguageTypes.map((schema) => (
+                    {formatTypes.map((schema) => (
                       <SelectItem
                         key={schema.value}
                         value={schema.value}
