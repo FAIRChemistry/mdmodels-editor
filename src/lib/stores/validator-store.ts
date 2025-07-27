@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools, subscribeWithSelector } from "zustand/middleware";
+import { devtools, subscribeWithSelector, persist } from "zustand/middleware";
 import { getErrors } from "../validation";
 import { Tab, ValidationError } from "@/types";
 import { getMdModelStructure } from "../mdutils";
@@ -28,33 +28,53 @@ interface ValidatorStore {
 
 export const useValidatorStore = create<ValidatorStore>()(
   devtools(
-    subscribeWithSelector((set, get) => ({
-      errors: getErrors(INITIAL_CODE),
-      code: INITIAL_CODE,
-      structure: getMdModelStructure(INITIAL_CODE),
-      selectedTab: Tab.Editor,
-      tourTaken: false,
-      tutorialOpen: false,
-      setTutorialOpen: (open: boolean) => set({ tutorialOpen: open }),
+    persist(
+      subscribeWithSelector((set, get) => ({
+        errors: getErrors(INITIAL_CODE),
+        code: INITIAL_CODE,
+        structure: getMdModelStructure(INITIAL_CODE),
+        selectedTab: Tab.Editor,
+        tourTaken: false,
+        tutorialOpen: false,
+        setTutorialOpen: (open: boolean) => set({ tutorialOpen: open }),
 
-      setCode: (code: string) => {
-        set((state) => {
-          const structure = getMdModelStructure(code) ?? state.structure;
-          const errors = getErrors(code);
+        setCode: (code: string) => {
+          set((state) => {
+            const structure = getMdModelStructure(code) ?? state.structure;
+            const errors = getErrors(code);
 
-          return {
-            code,
-            structure,
-            errors,
-          };
-        });
-      },
+            return {
+              code,
+              structure,
+              errors,
+            };
+          });
+        },
 
-      setSelectedTab: (tab: Tab) => set({ selectedTab: tab }),
+        setSelectedTab: (tab: Tab) => set({ selectedTab: tab }),
 
-      // Memoized selector
-      getStructure: () => get().structure,
-    }))
+        // Memoized selector
+        getStructure: () => get().structure,
+      })),
+      {
+        name: "mdmodels-editor-state",
+        partialize: (state) => ({
+          code: state.code,
+          selectedTab: state.selectedTab,
+          tourTaken: state.tourTaken,
+        }),
+        onRehydrate: (state) => {
+          if (state) {
+            // Recompute derived state after rehydration
+            const structure = getMdModelStructure(state.code);
+            const errors = getErrors(state.code);
+
+            state.structure = structure;
+            state.errors = errors;
+          }
+        },
+      }
+    )
   )
 );
 

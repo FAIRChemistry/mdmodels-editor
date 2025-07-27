@@ -74,20 +74,19 @@ export default function App() {
     <div className="min-h-screen bg-[#0d1117] relative overflow-hidden">
       <Background />
 
-      <main className="relative w-full px-8 py-8">
-        <div className="text-start mb-6 flex flex-row justify-between">
-          <h1 className="text-2xl font-semibold text-white mb-4 ml-4 flex items-baseline">
+      <main className="relative px-8 py-8 w-full">
+        <div className="flex flex-row justify-between mb-6 text-start">
+          <h1 className="flex items-baseline mb-4 ml-4 text-2xl font-semibold text-white">
             <RiStackLine className="mr-1 translate-y-[0.2rem]" />
-            <span className="text-2xl ml-1 text-white">MD-Models</span>
-            <span className="text-xl ml-2 text-gray-400 font-thin">Editor</span>
+            <span className="ml-1 text-2xl text-white">MD-Models</span>
+            <span className="ml-2 text-xl font-thin text-gray-400">Editor</span>
           </h1>
         </div>
         <div
-          className={`grid grid-cols-1 h-[calc(100vh-10rem)] min-h-[calc(100vh-10rem)] ${
-            selectedTab !== Tab.Editor
+          className={`grid grid-cols-1 h-[calc(100vh-10rem)] min-h-[calc(100vh-10rem)] ${selectedTab !== Tab.Editor
               ? "md:grid-cols-[1fr,5.5fr]"
               : "md:grid-cols-[1fr,4fr,1.5fr]"
-          } gap-0 shadow-lg`}
+            } gap-0 shadow-lg`}
         >
           <ReactFlowProvider>
             <TableOfContents />
