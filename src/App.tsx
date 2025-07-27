@@ -84,8 +84,8 @@ export default function App() {
         </div>
         <div
           className={`grid grid-cols-1 h-[calc(100vh-10rem)] min-h-[calc(100vh-10rem)] ${selectedTab !== Tab.Editor
-              ? "md:grid-cols-[1fr,5.5fr]"
-              : "md:grid-cols-[1fr,4fr,1.5fr]"
+            ? "md:grid-cols-[1fr,5.5fr]"
+            : "md:grid-cols-[1fr,4fr,1.5fr]"
             } gap-0 shadow-lg`}
         >
           <ReactFlowProvider>

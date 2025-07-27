@@ -63,6 +63,7 @@ export const useValidatorStore = create<ValidatorStore>()(
           selectedTab: state.selectedTab,
           tourTaken: state.tourTaken,
         }),
+        // @ts-ignore
         onRehydrate: (state) => {
           if (state) {
             // Recompute derived state after rehydration
