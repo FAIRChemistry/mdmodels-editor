@@ -63,22 +63,16 @@ export const useValidatorStore = create<ValidatorStore>()(
           selectedTab: state.selectedTab,
           tourTaken: state.tourTaken,
         }),
-        onRehydrateStorage: () => {
-          return (state, error) => {
-            if (!error && state) {
-              // Recompute derived state after rehydration
-              const structure = getMdModelStructure(state.code);
-              const errors = getErrors(state.code);
+        // @ts-ignore
+        onRehydrate: (state) => {
+          if (state) {
+            // Recompute derived state after rehydration
+            const structure = getMdModelStructure(state.code);
+            const errors = getErrors(state.code);
 
-              // Use setTimeout to ensure this runs after hydration is complete
-              setTimeout(() => {
-                useValidatorStore.setState({
-                  structure,
-                  errors,
-                });
-              }, 0);
-            }
-          };
+            state.structure = structure;
+            state.errors = errors;
+          }
         },
       }
     )
