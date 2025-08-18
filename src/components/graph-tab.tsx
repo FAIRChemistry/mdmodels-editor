@@ -5,7 +5,7 @@ const MemoizedGraph = memo(Graph);
 
 export const GraphTab: React.FC = memo(() => {
   return (
-    <div className="h-full w-full overflow-hidden">
+    <div className="overflow-hidden w-full h-full">
       <MemoizedGraph />
       <div id="portal-root" className="relative" />
     </div>
