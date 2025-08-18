@@ -7,6 +7,15 @@ import {
   ValidationError as RSValidationError,
 } from "mdmodels-core";
 
+const GLOBAL_ERROR_MESSAGE = `There probably is a syntax error breaking the entire model. You may want to check if there are any syntax breaking parts that prevent the model from being parsed. Some common issues are: 
+      
+- Incomplete options such as:
+  - Attribute options without a colon and value
+
+This is the original error message:
+
+`;
+
 /**
  * Converts an Validator object to a ValidationError object.
  *
@@ -16,6 +25,14 @@ import {
 export function mdErrorToValidationError(
   error: RSValidationError
 ): ValidationError {
+  if (error.location === "Global") {
+    return {
+      id: "Global",
+      location: "Global",
+      message: GLOBAL_ERROR_MESSAGE + error.message,
+      kind: "error",
+    };
+  }
   const locationLine = `Line ${error.positions[0].line}, Column ${error.positions[0].column.start}`;
   return {
     id: error.attribute ?? "",
@@ -73,7 +90,6 @@ export function convertErrors(validation: Validator): ValidationError[] {
     if (error.message === EMPTY_DOC_ERROR) {
       continue;
     }
-
     const convertedError = mdErrorToValidationError(error);
     convertedErrors.push(convertedError);
   }
