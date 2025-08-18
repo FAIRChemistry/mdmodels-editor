@@ -37,12 +37,29 @@ export default function AttributeEdge({
     [hoveredNode, data?.sourceObject, data?.targetObject]
   );
 
+  const isChild = React.useMemo(
+    () => data?.sourceObject === hoveredNode,
+    [data?.sourceObject, hoveredNode]
+  );
+
+  const isParent = React.useMemo(
+    () => data?.targetObject === hoveredNode,
+    [data?.targetObject, hoveredNode]
+  );
+
+  let strokeColor = "#8B5CF6";
+  if (isHovered && isChild) {
+    strokeColor = "#ff7f50";
+  } else if (isHovered && isParent) {
+    strokeColor = "#01C6FF";
+  }
+
   // Memoize the edge style object to prevent unnecessary recalculations
   const edgeStyle = React.useMemo(
     () => ({
       ...style,
       strokeWidth: isHovered ? 1.5 : 1,
-      stroke: isHovered ? "#01C6FF" : style.stroke || "#8B5CF6",
+      stroke: strokeColor,
       transition: "all 0.15s ease-out",
       strokeDasharray: isHovered ? "5,5" : "none",
       animation: isHovered ? "dashdraw 0.5s linear infinite" : "none",
